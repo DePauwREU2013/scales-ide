@@ -1,0 +1,1 @@
+This is where you can do your work, trying things out, commiting them and pushing. No one's gonna be judging you on them or anything. But, it's good practice, and you're gonna want to have a git workflow down pretty comfortably before we really start committing changes to the master branch.
