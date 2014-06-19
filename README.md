@@ -1,4 +1,3 @@
-scales-ide
-==========
+# Branch: Exploring
 
-A simple web-based IDE for media computation with Scala and the Scales library.
+This is so we can share with each other our random explorations into the concepts we're dealing with (since they may be helpful).
