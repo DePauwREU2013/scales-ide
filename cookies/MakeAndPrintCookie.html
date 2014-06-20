@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Making and Printing Cookies</title>
+        <script type="text/javascript">
+            //create cookies
+            function createCookie(user, pw) {
+                var cookieInfo = "name=" + user + ";password=" + pw + ";" + getExpiryDate();
+                document.cookie = cookieInfo;
+                alert("Your cookie: " + cookieInfo);
+            }
+            
+            function getExpiryDate() {
+                var d = new Date();
+                d.setTime(d.getTime() + (1 * 24 * 60 * 60 * 1000));
+                return "expires=" + d.toUTCString();
+            }
+            
+            function setCookie() {
+                if(document.myform.username.value == "") {
+                    alert("Cookie not created. Where's your username, huh?");
+                    return;
+                }
+                if(document.myform.password.value == "") {
+                    alert("Cookie not created. Gimme your password.");
+                    return;
+                }
+                var user = escape(document.myform.username.value);
+                var pw = escape(document.myform.password.value);
+                createCookie(user, pw);
+            }
+            
+            //read cookies
+            function getCookies() {
+                var cookies = document.cookie;
+                document.myform.displayer.value += cookies;
+            }
+        </script>
+    </head>
+    <body>
+        <form name="myform" action="">
+            Enter your username: <input type="text" name="username" /> <br />
+            Enter your password: <input type="text" name="password" /> <br />
+            <input type="button" value="Bake Me a Cookie" onclick="setCookie();" />
+            <hr color=Navy size="3px">
+            <span style="color: #77a272">Show me my cookies:</span> 
+            <input type="button" value="Yep, I want them." onclick="getCookies();" /> <br />
+            <textarea name="displayer" rows="25" cols="50"></textarea>
+        </form>
+    </body>
+</html>
