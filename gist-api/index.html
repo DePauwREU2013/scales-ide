@@ -29,7 +29,7 @@
 							// file name set dialog input string:
 							create_gist($('#name').val());
 							$('title').html($('#name').val());
-							
+							$(this).dialog("close");
 							console.log($('#name').val());
 					},
 						Cancel: function() {
