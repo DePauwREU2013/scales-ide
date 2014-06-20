@@ -11,12 +11,10 @@
 	<!-- Turn the #editor div into an Ace editor /-->
 	<script type="text/javascript">
 	$(document).ready(function() {
-		$('#editor').load('ajax.src', function() {
 			editor = ace.edit('editor');
-			editor.setTheme('ace/theme/chrome');
+			editor.setTheme('ace/theme/monokai');
 			editor.getSession().setMode('ace/mode/scala');
 		});
-	});
 	</script>
 
 	<!-- Basic stylesheet /-->
@@ -33,7 +31,11 @@
 </head>
 
 <body>
-
+<!-- File management buttons /-->
+<div id="file-mgmt">
+	<button id="create-gist">New Project</button>
+	<button id="open-gist">Open Project</button>
+</div>
 <!-- Ace source code editor /--> 	
 <div id="editor"></div>
 
