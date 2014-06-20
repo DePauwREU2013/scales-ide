@@ -7,14 +7,31 @@
 	<!-- Import necessary JavaScript libraries /-->
 	<script src="//cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/ace.js" type="text/javascript" charset="utf-8"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+	<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 	
-	<!-- Turn the #editor div into an Ace editor /-->
+	
 	<script type="text/javascript">
 	$(document).ready(function() {
+			
+			// Turn the #editor div into an Ace editor
 			editor = ace.edit('editor');
 			editor.setTheme('ace/theme/monokai');
 			editor.getSession().setMode('ace/mode/scala');
-		});
+
+			$('#create-gist').click( function() {
+				$( "#new-dialog" ).dialog({
+					buttons: {
+						"Create": function() {
+							console.log("created");
+					},
+						Cancel: function() {
+						$(this).dialog("close");
+						}
+					}	
+				}); 
+			});
+	});
 	</script>
 
 	<!-- Basic stylesheet /-->
@@ -36,9 +53,19 @@
 	<button id="create-gist">New Project</button>
 	<button id="open-gist">Open Project</button>
 </div>
+
 <!-- Ace source code editor /--> 	
 <div id="editor"></div>
 
+<!-- Initially invisible components /-->
+<div id='new-dialog' title="New Project...">
+	<p>Please enter a name for your project:</p>
+	<form>
+		<label for="name">
+			<input type="text" name="name" id="name" />
+		</label> 
+	</form>
+</div>
 
 </body>
 </html>
