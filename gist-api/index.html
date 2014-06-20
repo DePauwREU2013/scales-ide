@@ -10,20 +10,27 @@
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
 	<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 	
-	
+	<!-- jQuery /-->
 	<script type="text/javascript">
 	$(document).ready(function() {
 			
-			// Turn the #editor div into an Ace editor
+			// Turn the #editor div into an Ace editor:
 			editor = ace.edit('editor');
 			editor.setTheme('ace/theme/monokai');
 			editor.getSession().setMode('ace/mode/scala');
 
+			// Dialog prompt for new project name:
 			$('#create-gist').click( function() {
 				$( "#new-dialog" ).dialog({
 					buttons: {
 						"Create": function() {
-							console.log("created");
+							
+							// Create an anonymous gist with language set to Scala and
+							// file name set dialog input string:
+							create_gist($('#name').val());
+							$('title').html($('#name').val());
+							
+							console.log($('#name').val());
 					},
 						Cancel: function() {
 						$(this).dialog("close");
@@ -32,6 +39,16 @@
 				}); 
 			});
 	});
+		
+	function reqListener () {
+	  console.log(this.responseText);
+	}
+	function create_gist(filename) {
+		var oReq = new XMLHttpRequest();
+		oReq.onload = reqListener;
+		oReq.open("post", "https://api.github.com/gists", true);
+		oReq.send('{"description": "New Scales Project", "public": "true","files": {"'+filename+'": {"content": "please please"}}}');
+	}
 	</script>
 
 	<!-- Basic stylesheet /-->
