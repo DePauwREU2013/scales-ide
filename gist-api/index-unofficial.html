@@ -7,17 +7,21 @@
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
         <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+        
 <!--        <script src="//code.jquery.com/jquery-1.10.2.js"></script>-->
         
         <!-- jQuery /-->
         <script type="text/javascript">
+
             $(document).ready(function() {
                 
                 // Turn the #editor div into an Ace editor:
                 editor = ace.edit('editor');
                 editor.setTheme('ace/theme/monokai');
                 editor.getSession().setMode('ace/mode/scala');
-                
+                editor.setValue("123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890");
+                editor.setOption("wrap","free");                
+
                 // Dialog prompt for new project name:
                 $('#create-gist').click( function() {
 				    $( "#new-dialog" ).dialog({
@@ -27,10 +31,10 @@
 				                // Create an anonymous gist with language set to Scala and
 				                // file name set dialog input string:
 				                create_gist($('#name').val());
-				                $('title').html($('#name').val());
-                           			$(this).dialog("close");
+                                $('title').html($('#name').val());
+                                $(this).dialog("close");
 				            },
-                            			Cancel: function() {
+                            Cancel: function() {
 				                $(this).dialog("close");
                             }
                         }	
@@ -38,11 +42,15 @@
                 });
                 
                             
-            // Set resizable Ace editor
-                $( "#resizable" ).resizable();
-                $("resizable").css({'overflow':'hidden'});
+                // Set resizable Ace editoru
+                $( "#resizable" ).resizable({});
+                $("#resizable").resize( function() {
+                    editor.resize();
+                });
+
+
             });
-            
+
             // Create a new Gist with the supplied file name:
             function create_gist(filename) {
 		
@@ -54,8 +62,10 @@
                 oReq.open("post", "https://api.github.com/gists", true);
                 oReq.send('{"description": "New Scales Project", "public": "true","files": {"'+filename+'": {"content": "please please"}}}');
             }
+
         </script>
-        <link rel="stylesheet" type="text/css" href="style-ace.css" />
+<link rel="stylesheet" type="text/css" href="style-ace.css" />
+
     </head>
     <body>
         <!-- File management buttons /-->
