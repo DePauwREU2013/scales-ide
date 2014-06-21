@@ -22,14 +22,20 @@
 			// Dialog prompt for new project name:
 			$('#create-gist').click( function() {
 				$( "#new-dialog" ).dialog({
-					buttons: {
-						"Create": function() {
-							
+					open: function() {
+						$(this).off('submit').on('submit', function() {
 							// Create an anonymous gist with language set to Scala and
 							// file name set dialog input string:
 							create_gist($('#name').val());
 							$('title').html($('#name').val());
 							$(this).dialog("close");
+							return false;
+						});
+					},
+					buttons: {
+						"Create": function() {
+						$(this).find('form').submit();		
+
 					},
 						Cancel: function() {
 						$(this).dialog("close");
