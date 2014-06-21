@@ -16,20 +16,11 @@
             $(document).ready(function() {
                 
                 // Turn the #editor div into an Ace editor:
-
                 editor = ace.edit('editor');
                 editor.setTheme('ace/theme/monokai');
                 editor.getSession().setMode('ace/mode/scala');
                 editor.setValue("123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890");
                 editor.setOption("wrap","free");                
-
-
-                editor2 = ace.edit('editor2');
-                editor2.setTheme('ace/theme/monokai');
-                editor2.getSession().setMode('ace/mode/scala');
-                editor2.setValue("123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890");
-                editor2.setOption("wrap","free");                
-
 
                 // Dialog prompt for new project name:
                 $('#create-gist').click( function() {
@@ -52,16 +43,9 @@
                 
                             
                 // Set resizable Ace editoru
-                $( "#resizable" ).resizable({
-                    handles: "e"
-                });
-                $('.ui-resizable-e').html('<div id="grabber"></div>')
+                $( "#resizable" ).resizable({});
                 $("#resizable").resize( function() {
                     editor.resize();
-
-                    $('#autodiv').css("left",$("#resizable").css("width"));
-                    $('#autodiv').css("right", "0");
-                    editor2.resize();
                 });
 
 
@@ -77,10 +61,6 @@
                 oReq.onload = reqListener;
                 oReq.open("post", "https://api.github.com/gists", true);
                 oReq.send('{"description": "New Scales Project", "public": "true","files": {"'+filename+'": {"content": "please please"}}}');
-            }
-
-            function setUpAce(aceEdit, divId) {
-
             }
 
         </script>
@@ -99,9 +79,6 @@
             <div id="editor"></div>
         </div>
         
-        <div id="autodiv">
-            <div id="editor2"></div>
-        </div>
         <!-- Initially invisible components /-->
         <div id='new-dialog' title="New Project...">
             <p>Please enter a name for your project:</p>

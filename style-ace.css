@@ -1,0 +1,84 @@
+/*
+#editor {
+    position: relative;
+                
+    left: 0;
+    right: 0;
+    width: 500px;
+    height: 500px;
+}
+*/
+
+#new-dialog {
+    display: none;    
+}
+
+#panels {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+}
+
+#resizable { 
+    position: absolute;
+    width: 50%;
+    top: 3em;
+    bottom: 0px;
+    padding: 5px; 
+    
+    display: block-inline;
+}
+
+#editor { 
+    position: absolute; 
+
+    top: 0; 
+    padding: 5px; 
+    left:0; 
+    bottom: 0; 
+    right: 0; 
+}
+
+#autodiv {
+    position: absolute;
+    left: 50%;
+    right: 0px;
+    top: 3em;
+    bottom: 0px;
+    padding:; 5px;
+    margin-left:2em;
+    display: block-inline;
+}
+
+#editor2 {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 5px;
+}
+
+.ui-resizable-e {
+cursor: e-resize;
+width: 15px;
+right: -15px;
+top: 0;
+height: 100%;
+background-color: gray;
+}
+
+#grabber {
+    position: absolue;
+    left: 10px;
+    right: 10px;
+    width: 5px;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    top: 100px;
+    bottom: 100px;
+    z-index: 100;
+    background-color: pink;
+}
