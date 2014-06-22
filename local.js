@@ -99,8 +99,10 @@
 
             }); // $(document).ready
             
-            function load_file() {
-                
+            function load_file(parent_id) {
+                if (parent_id == "resizable") {
+                    editor.setValue(global_gist_data.data.files[])
+                }
             }
     
 
