@@ -28,6 +28,7 @@
 							// file name set dialog input string:
 							create_gist($('#name').val());
 							$('title').html($('#name').val());
+							$('#name').val("");
 							$(this).dialog("close");
 							return false;
 						});
