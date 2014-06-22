@@ -1,16 +1,12 @@
-
+            var active_file;
             // jQuery
             $(document).ready(function() {
                 
-
+                
                 // Turn the left editor div (#editor) into an Ace editor:
                 editor = ace.edit('editor');
                 editor.setTheme('ace/theme/monokai');
                 editor.getSession().setMode('ace/mode/scala');
-                
-                // debug
-                editor.setValue("123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890");
-                // end-debug
 
                 editor.setOption("wrap","free");                
 
@@ -19,9 +15,7 @@
                 editor2.setTheme('ace/theme/monokai');
                 editor2.getSession().setMode('ace/mode/scala');
                 
-                // debug
-                editor2.setValue("123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890");
-                // end-debug
+            
 
                 editor2.setOption("wrap","free");                
                 
@@ -41,7 +35,7 @@
                         open_gist(gistid);
                     }
 
-                })
+                });
 
                 // Make context-list resizable:
                 $('#context-list').resizable({
@@ -101,7 +95,9 @@
             
             function load_file(parent_id) {
                 if (parent_id == "resizable") {
-                    editor.setValue(global_gist_data.data.files[])
+                    editor.setValue(global_gist_data.data.files[active_file].content);
+                } else if (parent_id == "autodiv") {
+                    editor2.setValue(global_gist_data.data.files[active_file].content);
                 }
             }
     
@@ -143,7 +139,10 @@
                     $('.draggable').draggable({
                         helper: 'clone',
                         zIndex: 100,
-                        revert: "invalid"
+                        revert: "invalid",
+                        start: function() {
+                            active_file = $(this).html();
+                        }
                     });
                 }); // $.ajax
 
