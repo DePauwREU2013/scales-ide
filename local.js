@@ -1,4 +1,10 @@
             var active_file;
+            var file_tracker = {
+                inleft: "",
+                inright: ""
+            };
+
+            
             // jQuery
             $(document).ready(function() {
                 
@@ -93,11 +99,23 @@
 
             }); // $(document).ready
             
+
+            // Load file content into editor
             function load_file(parent_id) {
                 if (parent_id == "resizable") {
+                    file_tracker.inleft = active_file;
                     editor.setValue(global_gist_data.data.files[active_file].content);
+                    editor.on('change',function() {
+                        global_gist_data.data.files[file_tracker.inleft].content = 
+                            editor.getValue();
+                    });
                 } else if (parent_id == "autodiv") {
+                    file_tracker.inright = active_file;
                     editor2.setValue(global_gist_data.data.files[active_file].content);
+                      editor2.on('change',function() {
+                        global_gist_data.data.files[file_tracker.inright].content = 
+                            editor2.getValue();
+                    });
                 }
             }
     
