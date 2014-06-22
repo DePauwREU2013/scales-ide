@@ -7,85 +7,127 @@
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
         <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-        
-<!--        <script src="//code.jquery.com/jquery-1.10.2.js"></script>-->
-        
-        <!-- jQuery /-->
+                
         <script type="text/javascript">
 
+            // jQuery
             $(document).ready(function() {
                 
-                // Turn the #editor div into an Ace editor:
 
+                // Turn the left editor div (#editor) into an Ace editor:
                 editor = ace.edit('editor');
                 editor.setTheme('ace/theme/monokai');
                 editor.getSession().setMode('ace/mode/scala');
+                
+                // debug
                 editor.setValue("123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890");
+                // end-debug
+
                 editor.setOption("wrap","free");                
 
-
+                // Turn the right editor div (#editor2) into an Ace editor:
                 editor2 = ace.edit('editor2');
                 editor2.setTheme('ace/theme/monokai');
                 editor2.getSession().setMode('ace/mode/scala');
+                
+                // debug
                 editor2.setValue("123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890");
-                editor2.setOption("wrap","free");                
+                // end-debug
 
+                editor2.setOption("wrap","free");                
 
                 // Dialog prompt for new project name:
                 $('#create-gist').click( function() {
 				    $( "#new-dialog" ).dialog({
 				        buttons: {
-				            "Create": function() {
-							
-				                // Create an anonymous gist with language set to Scala and
-				                // file name set dialog input string:
-				                create_gist($('#name').val());
+				            // Create an anonymous gist with language set to
+                            // Scala and file name set to dialog input string:
+                            "Create": function() {
+							    create_gist($('#name').val());
                                 $('title').html($('#name').val());
                                 $(this).dialog("close");
 				            },
                             Cancel: function() {
 				                $(this).dialog("close");
                             }
-                        }	
-                    }); 
-                });
+                        } 
+                    }); // $("#new-dialog").dialog
+                }); // $('#create-gist').click
                 
-                            
-                // Set resizable Ace editoru
-                $( "#resizable" ).resizable({
+                // Make context-list resizable:
+                $('#context-list').resizable({
                     handles: "e"
                 });
-                $('.ui-resizable-e').html('<div id="grabber"></div>')
-                $("#resizable").resize( function() {
-                    editor.resize();
 
-                    $('#autodiv').css("left",$("#resizable").css("width"));
-                    $('#autodiv').css("right", "0");
-                    editor2.resize();
+                // Automatically resize the panels to the right:
+                $('#context-list').resize( function(){
+                    $('#panels').css('left', 
+                        $('#context-list').css('width'));
                 });
 
+                // Set resizable container for left Ace editor:
+                $( "#resizable" ).resizable({
+                    // Handle can be selected as $('.ui-resizable-e').
+                    handles: "e"
+                });
 
-            });
+                // Triggered when panel is resized:
+                $("#resizable").resize( function() {
+                    
+                    // Notify Ace to update its size:
+                    editor.resize();
 
-            // Create a new Gist with the supplied file name:
+                    // Automatically resize right panel to fill the 
+                    // remainder of div#panels:
+                    $('#autodiv').css("left",$("#resizable").css("width"));
+                    $('#autodiv').css("right", "0");
+                    
+                    // Notify Ace to update its size:
+                    editor2.resize();
+                }); // $("#resizable").resize
+
+                // Make items in the context-list draggable:
+                $('.draggable').draggable({
+                    helper: 'clone',
+                    zIndex: 100,
+                    revert: "invalid"
+                });
+
+                // Make the panels received drag & dropped items:
+                $('.droppable').droppable({
+                    accept: '.draggable',
+                    over: function() {
+                        $('.editor').addClass('highlight');
+                    },
+                    out: function() {
+                        $('.editor').removeClass('highlight');
+                    }
+                })
+
+            }); // $(document).ready
+
+    
+
+            // Create a new Gist with the supplied file name (using a POST
+            // request--non-functional in jQuery):
             function create_gist(filename) {
-		
+                
+                // Process server's response:
                 function reqListener () {
                     console.log(this.responseText);
                 }
+
+                // Make POST request:
                 var oReq = new XMLHttpRequest();
                 oReq.onload = reqListener;
                 oReq.open("post", "https://api.github.com/gists", true);
-                oReq.send('{"description": "New Scales Project", "public": "true","files": {"'+filename+'": {"content": "please please"}}}');
-            }
-
-            function setUpAce(aceEdit, divId) {
-
+                oReq.send('{"description": "New Scales Project", "public": \
+                            "true","files": {"'+filename+
+                            '": {"content": "please please"}}}');
             }
 
         </script>
-<link rel="stylesheet" type="text/css" href="style-ace.css" />
-
+        <link rel="stylesheet" type="text/css" href="style-ace.css" />
     </head>
     <body>
         <!-- File management buttons /-->
@@ -93,22 +135,36 @@
             <button id="create-gist">New Project</button>
             <button id="open-gist">Open Project</button>
         </div>
-        
+
+
+        <div id="context-list">
+            <ul class="project-tree">
+                <li >
+                    My Project:
+                    <ul  class="draggable">
+                        <li class="draggable">Main.scala</li>
+                        <li class="draggable">Include.js</li>
+                        <li class="draggable">Resource.svg</li>
+
+
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
         <!-- Container for two multi-function panels /-->
         <div id="panels">
-
-            <!-- Ace source code editor /--> 	
-            <div id="resizable">
-                <div id="editor"></div>
+            <!-- Left Ace source code editor /--> 	
+            <div id="resizable" class="panel droppable">
+                <div id="editor" class="editor"></div>
             </div>
             
-            <div id="autodiv">
-                <div id="editor2"></div>
+            <!-- Right Ace source code editor /-->   
+            <div id="autodiv" class="panel droppable">
+                <div id="editor2" class="editor"></div>
             </div>
-
-        </div> <!-- #panels /-->
-
         
+        </div>
         <!-- Initially invisible components /-->
         <div id='new-dialog' title="New Project...">
             <p>Please enter a name for your project:</p>

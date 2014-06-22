@@ -2,54 +2,73 @@
     display: none;    
 }
 
-#panels {
+#context-list {
     position: absolute;
-    top: 3em;
-    right: 0px;
-    bottom: 0px;
+    top: 0;
+    bottom: 0;
     left: 0;
+    width: 10em; 
+    background-color: #272822; /* from ace-monokai */
+    color: white;
+    padding: .2em;
+    font-family: 'Monaco','Menlo','Ubuntu Mono','Consolas','source-code-pro',monospace;
 }
 
-#resizable { 
+#panels {
     position: absolute;
-    width: 50%;
     top: 0;
+    right: 0px;
     bottom: 0px;
-    padding: 5px;
+    left: 10em;
+}
+.panel {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin-left: 11px;
+}
+.editor {
+    position: absolute; 
+    top: 0; 
+    bottom: 0; 
+}
+.highlight {
+    background-color: white;
+}
+#resizable { 
+    width: 50%;
 }
 
 #editor { 
-    position: absolute; 
-    top: 0; 
-    left:0; 
-    bottom: 0; 
-    right: 0; 
+     left:0; 
+     right: 0; 
 }
 
 #autodiv {
-    position: absolute;
     left: 50%;
     right: 0px;
-    top: 0em;
-    bottom: 0px;
-    margin-left:1em;
+    /*margin-left: 5px;*/
 }
 
 #editor2 {
-    position: absolute;
-    top: 0;
     right: 0;
-    bottom: 0;
     left: 0;
-/*    padding: 5px;*/
 }
 
 .ui-resizable-e {
 cursor: e-resize;
-width: 15px;
-right: -15px;
+width: 10px;
+right: -5px;
 top: 0;
 height: 100%;
+background-image: url(resources/images/grabber.svg);
+background-position: center;
+background-repeat: no-repeat;
 background-color: gray;
 }
 
+ul.project-tree {
+    list-style-type: none;
+    padding: .5em;
+    padding-left: 1em;
+}
