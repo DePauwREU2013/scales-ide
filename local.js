@@ -103,18 +103,46 @@
             // Load file content into editor
             function load_file(parent_id) {
                 if (parent_id == "resizable") {
+
+                    // If it's open in the other editor, close it there first:
+                    if (file_tracker.inright == active_file) {
+                        file_tracker.inright = null;
+                        editor2.setValue("");
+                    }
+
+                    // Keep track of where the file is loaded
                     file_tracker.inleft = active_file;
+
+                    // Load content into editor
                     editor.setValue(global_gist_data.data.files[active_file].content);
+                    
+                    // Synchronize the global_gist_data object with the editor 
+                    // content.
                     editor.on('change',function() {
-                        global_gist_data.data.files[file_tracker.inleft].content = 
+                        
+                        // Verify that a file is still being edited here
+                        if (file_tracker.inleft) {
+                            global_gist_data.data.files[file_tracker.inleft].content = 
                             editor.getValue();
+                        }
                     });
                 } else if (parent_id == "autodiv") {
+
+                    // If it's open in the other editor, close it there first:
+                    if (file_tracker.inleft == active_file) {
+                        file_tracker.inleft = null;
+                        editor.setValue("");
+                    }
+
+
                     file_tracker.inright = active_file;
                     editor2.setValue(global_gist_data.data.files[active_file].content);
                       editor2.on('change',function() {
+                        
+                        if (file_tracker.inright) {
                         global_gist_data.data.files[file_tracker.inright].content = 
                             editor2.getValue();
+                        }
                     });
                 }
             }
