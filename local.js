@@ -34,7 +34,7 @@
 
                 });
                 
-                $('#open').click( function() {
+                $('#open-gist').click( function() {
                     var gistid;
                     gistid = prompt("Please enter the Gist ID of the project:","8482d9c61e1bd78dcc79");
                     if (gistid) {
