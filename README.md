@@ -4,6 +4,10 @@ scales-ide
 A simple web-based IDE for media computation with Scala and the Scales library.
 
 ## To-do:
+###Local Storage
+* Key, Value pairs will map project names to their ever-changing gist IDs
+* Some data that is currently being handled by global variables should be moved to the localStorage object. 
+
 ###Implement "New File" so that users can add files to their current project.
 * Create UI element (button, link, etc.)
 * Prompt for new file name
@@ -13,9 +17,9 @@ A simple web-based IDE for media computation with Scala and the Scales library.
 ###Give each panel a context indicator.
 * It should be apparent which file is open in each editor (especially if there are blank files).
 
-###Implement Save.
-* Insert appropriate fields from the `global_gist_data` object into a `PATCH` request to Gist API.
-* Give user feedback on success/failure.
+###~~Implement Save.~~
+* ~~Insert appropriate fields from the `global_gist_data` object into a `PATCH` request to Gist API.~~
+* ~~Give user feedback on success/failure.~~
 
 ###Add a context for output.
 * List it in the draggable context/file list UI.
