@@ -5,6 +5,7 @@
             };
             var debugData;
             var lstor = window.localStorage;
+            var projectArray;
             // jQuery
             $(document).ready(function() {
                 
@@ -30,26 +31,30 @@
                 // Create new file
                 $('#create').click( function() {
                     var filename = prompt("Please enter the name of your project:");
-                    var projectList;
-
-                    // If this is not the user's first project:
-                    if (lstor.scales_projects) {
-
-                        // Append this project name to their list of projects
-                        projectList = lstor.getItem('scales_projects');
-                        projectList += (", " + filename);
-                    } else {
-
-                        // Otherwise, this project comprises their entire list.
-                        projectList = filename;
-                    }
-
-                    // Save their project list in localStorage
-                    lstor.setItem("scales_projects", projectList);
                     
-                    // Create a gist with the new project name.
-                    create_gist(filename);
+                    // If they didn't hit cancel:
+                    if (filename) {
+                        var projectList;
 
+                        // If this is not the user's first project:
+                        if (lstor.scales_projects) {
+
+                            // Append this project name to their list of projects
+                            projectList = lstor.getItem('scales_projects');
+                            projectList += (", " + filename);
+                        } else {
+
+                            // Otherwise, this project comprises their entire list.
+                            projectList = filename;
+                        }
+
+                        // Save their project list in localStorage
+                        lstor.setItem("scales_projects", projectList);
+                        
+                        // Create a gist with the new project name.
+                        create_gist(filename);
+                        display_project_list();
+                    }
                 });
                 
                 $('#open-gist').click( function() {
@@ -61,7 +66,7 @@
                         
                         // Try to evaluate the entry as a Gist ID:
                         try {
-                            eval(projectName);
+                            // eval(projectName);
                             eval('0x'+projectName);
                             open_gist(projectName);
                         
@@ -175,9 +180,29 @@
                         console.log(this);
                     }
                 })
-
+                display_project_list();
             }); // $(document).ready
+                
             
+            // Displays the list of user's projects in the context window:
+            function display_project_list() {
+
+                // If there are projects listed in local storage:
+                if (lstor.getItem("scales_projects")) {
+                    
+                    // Parse the list into an array:
+                    projectArray = $.csv.toArray(lstor.getItem('scales_projects'));
+                } else {
+                    // Otherwise, make projectArray a new, empty Array:
+                    projectArray = new Array();
+                }
+
+                $('#project-list').empty();
+                // List all the projects in the context-list:   
+                for (var project in projectArray) {
+                    $('#project-list').append('<li id="'+projectArray[project]+'"">'+projectArray[project]+'</li>');
+                }
+            }
 
             // Load file content into editor
             function load_file(parent_id) {
@@ -242,14 +267,14 @@
                 oReq.open("post", "https://api.github.com/gists", true);
                 oReq.send('{"description": "New Scales Project", "public": \
                             "true","files": {"'+filename+
-                            '": {"content": "please please"}}}');
+                            '": {"content":"'+editor.getValue()+'"}}}');
             } // create_gist
 
             // Open a Gist with the provided Gist ID (using a GET request)
             function open_gist(gistid) {
                 console.log(gistid);
                 ace.edit("editor").setValue("");
-                
+
                 $.ajax({
                     url: 'https://api.github.com/gists/' + gistid,
                     type: 'GET',
