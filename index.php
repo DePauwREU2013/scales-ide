@@ -24,6 +24,7 @@
                 <button id="open-gist">Open Gist</button><br />
                 <label for="open-file">Open Files:</label>
                 <input type="file" name="open-file" id="openLocalFile" /><br />
+                <button id="set-file-path">Set File Path</button>
                 <button id="save">Save</button><br />
             </div>
             <ul class="project-tree">

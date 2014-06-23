@@ -4,7 +4,8 @@
                 inright: ""
             };
             var debugData;
-            
+            var lstor = window.localStorage;
+
             // jQuery
             $(document).ready(function() {
                 
@@ -31,7 +32,6 @@
                 $('#create').click( function() {
                     var filename = prompt("Please enter the name of your project:");
                     create_gist(filename);
-
                 });
                 
                 $('#open-gist').click( function() {
@@ -40,9 +40,16 @@
                     if (gistid) {
                         open_gist(gistid);
                     }
-
                 });
 
+                $('#set-file-path').click( function() {
+                    var filePath = prompt("Please enter the file path to use for saving files:");
+                    lstor.setItem("filePath",filePath); 
+                });
+
+                $('save').click( function() {
+                    editor.execCommand("save");
+                });
 
                 function readFile(e) {
 
@@ -51,12 +58,13 @@
 
                         // The first in the list of opened files is f
                         var f = e.target.files[0];
-                        
+
+
                         // If f actually points to a file...
                         if (f) {
 
                             // ...then this is its name:
-                            fname = f.name; //Global
+                            lstor.setItem("fileName",f.name); //Global
 
                             // the FileReader will read the contents.
                             var r = new FileReader();
@@ -64,7 +72,7 @@
                             // When the file is finished loading:
                             r.onload = function(e) {
                                 var contents = e.target.result;
-                                $('#file-list').append('<li id="'+fname+'" class="draggable">'+fname+'</li>');
+                                $('#file-list').append('<li id="'+f.name+'" class="draggable">'+f.name+'</li>');
                                 global_gist_data = JSON.parse('{\
                                     "meta": "",\
                                     "data": {\
@@ -73,7 +81,7 @@
                                     }\
                                 }');
 
-                                global_gist_data.data.files[fname] = {"content": contents };
+                                global_gist_data.data.files[f.name] = {"content": contents };
                                 $('.draggable').draggable({
                                     helper: 'clone',
                                     zIndex: 100,
@@ -82,7 +90,7 @@
                                         active_file = $(this).html();
                                     }
                                 });
-                            }
+                            };
 
                             // r is reading the file, f, as text, to be 
                             // captured in the triggered event, through the 
@@ -95,8 +103,8 @@
                     }
 
                 }
-                
-                document.getElementById('openLocalFile').addEventListener('change', readFile, false);
+                $('#openLocalFile').change(readFile);
+//                document.getElementById('openLocalFile').addEventListener('change', readFile, false);
 
 
                 // Make context-list resizable:
@@ -145,7 +153,29 @@
                         load_file($(this).attr('id'));
                         console.log(this);
                     }
-                })
+                });
+                editor.commands.addCommand({
+                    name: "save",
+                    bindKey: {
+                        win: "Ctrl-S",
+                        mac: "Command-S",
+                        sender: "editor|cli"
+                    },
+                    exec: function() {
+                        saveFile();
+                    }
+                });
+                editor2.commands.addCommand({
+                    name: "save",
+                    bindKey: {
+                        win: "Ctrl-S",
+                        mac: "Command-S",
+                        sender: "editor|cli"
+                    },
+                    exec: function() {
+                        saveFile();
+                    }
+                });
 
             }); // $(document).ready
             
@@ -228,7 +258,7 @@
                 }).success( function(gistdata) {
                     $('#project-name').html(gistid.toString()+":");
                     $('#file-list').html('');
-                    for (file in gistdata.data.files) {
+                    for (var file in gistdata.data.files) {
                         $('#file-list').append('<li id="'+file+'" class="draggable">'+file+'</li>');
                     }
                     global_gist_data = gistdata;
@@ -245,33 +275,12 @@
             }
 
         saveFile = function() {
-        var contents = env.editor.getSession().getValue();
+        var contents = editor.getSession().getValue();
 
-        $.post("write.php", {contents: contents }, function() {
+        $.post("write.php", {fullname: lstor.getItem('filePath') + lstor.getItem('fileName'), contents: contents }, function() {
             // add error checking
             alert('successful save');
         });
 
-        editor.commands.addCommand({
-            name: "save",
-            bindKey: {
-                win: "Ctrl-S",
-                mac: "Command-S",
-                sender: "editor|cli"
-            },
-            exec: function() {
-                saveFile();
-            }
-        });
-        editor2.commands.addCommand({
-            name: "save",
-            bindKey: {
-                win: "Ctrl-S",
-                mac: "Command-S",
-                sender: "editor|cli"
-            },
-            exec: function() {
-                saveFile();
-            }
-        });
+ 
 };
