@@ -5,7 +5,7 @@
             };
             var debugData;
             var lstor = window.localStorage;
-            var projectArray;
+            
             // jQuery
             $(document).ready(function() {
                 
@@ -32,6 +32,15 @@
                 $('#create').click( function() {
                     var filename = prompt("Please enter the name of your project:");
                     
+                    while (projectArray().indexOf(filename) >= 0) {
+                        filename = prompt("Project name already in use, please try another name:");
+                    }
+
+                    if (!editor.getValue()) {
+                        alert("Cannot create project with empty file.");
+                        return;
+                    }
+
                     // If they didn't hit cancel:
                     if (filename) {
                         var projectList;
@@ -59,7 +68,7 @@
                 
                 $('#open-gist').click( function() {
                     var projectName;
-                    projectName = prompt("Please enter the Gist ID of the project:","8482d9c61e1bd78dcc79");
+                    projectName = prompt("Please enter the project name or Gist ID:");
                     
                     // If they didn't hit cancel:
                     if (projectName) {
@@ -67,7 +76,7 @@
                         // Try to evaluate the entry as a Gist ID:
                         try {
                             // eval(projectName);
-                            eval('0x'+projectName);
+                            eval(projectName);
                             open_gist(projectName);
                         
                         // If the input isn't decimal or hexidecimal, it's a project name:
@@ -183,24 +192,26 @@
                 display_project_list();
             }); // $(document).ready
                 
-            
-            // Displays the list of user's projects in the context window:
-            function display_project_list() {
-
-                // If there are projects listed in local storage:
+            function projectArray() {
+               // If there are projects listed in local storage:
                 if (lstor.getItem("scales_projects")) {
                     
                     // Parse the list into an array:
-                    projectArray = $.csv.toArray(lstor.getItem('scales_projects'));
+                    return $.csv.toArray(lstor.getItem('scales_projects'));
                 } else {
                     // Otherwise, make projectArray a new, empty Array:
-                    projectArray = new Array();
+                    return new Array();
                 }
+
+            }
+            // Displays the list of user's projects in the context window:
+            function display_project_list() {
+                var pArray = projectArray();
 
                 $('#project-list').empty();
                 // List all the projects in the context-list:   
-                for (var project in projectArray) {
-                    $('#project-list').append('<li id="'+projectArray[project]+'"">'+projectArray[project]+'</li>');
+                for (var project in pArray) {
+                    $('#project-list').append('<li id="'+pArray[project]+'"">'+pArray[project]+'</li>');
                 }
             }
 
@@ -255,7 +266,7 @@
             // Create a new Gist with the supplied file name (using a POST
             // request--non-functional in jQuery):
             function create_gist(filename) {
-                
+
                 // Process server's response:
                 function reqListener () {
                     lstor.setItem(filename, JSON.parse(this.responseText).id);
@@ -264,10 +275,10 @@
                 // Make POST request:
                 var oReq = new XMLHttpRequest();
                 oReq.onload = reqListener;
+
+
                 oReq.open("post", "https://api.github.com/gists", true);
-                oReq.send('{"description": "New Scales Project", "public": \
-                            "true","files": {"'+filename+
-                            '": {"content":"'+editor.getValue()+'"}}}');
+                oReq.send('{"description": "New Scales Project", "public": "true","files": {"'+filename+'": {"content":"'+editor.getValue()+'"}}}');
             } // create_gist
 
             // Open a Gist with the provided Gist ID (using a GET request)
@@ -300,5 +311,10 @@
 
             // Lookup the gist ID for a project name, and pass it to open_gist(gistid):
             function open_project(projectName) {
-                open_gist(lstor.getItem(projectName));
+                if (projectArray().indexOf(projectName) >= 0 ){
+                    open_gist(lstor.getItem(projectName));
+                } else {
+                    alert("Cannot find project named, " + projectName + ".");
+
+                }
             }
