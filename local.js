@@ -4,7 +4,7 @@
                 inright: ""
             };
             var debugData;
-            
+            var lstor = window.localStorage;
             // jQuery
             $(document).ready(function() {
                 
@@ -30,17 +30,46 @@
                 // Create new file
                 $('#create').click( function() {
                     var filename = prompt("Please enter the name of your project:");
+                    var projectList;
+
+                    // If this is not the user's first project:
+                    if (lstor.scales_projects) {
+
+                        // Append this project name to their list of projects
+                        projectList = lstor.getItem('scales_projects');
+                        projectList += (", " + filename);
+                    } else {
+
+                        // Otherwise, this project comprises their entire list.
+                        projectList = filename;
+                    }
+
+                    // Save their project list in localStorage
+                    lstor.setItem("scales_projects", projectList);
+                    
+                    // Create a gist with the new project name.
                     create_gist(filename);
 
                 });
                 
                 $('#open-gist').click( function() {
-                    var gistid;
-                    gistid = prompt("Please enter the Gist ID of the project:","8482d9c61e1bd78dcc79");
-                    if (gistid) {
-                        open_gist(gistid);
+                    var projectName;
+                    projectName = prompt("Please enter the Gist ID of the project:","8482d9c61e1bd78dcc79");
+                    
+                    // If they didn't hit cancel:
+                    if (projectName) {
+                        
+                        // Try to evaluate the entry as a Gist ID:
+                        try {
+                            eval(projectName);
+                            eval('0x'+projectName);
+                            open_gist(projectName);
+                        
+                        // If the input isn't decimal or hexidecimal, it's a project name:
+                        } catch(e) {
+                            open_project(projectName);
+                        };
                     }
-
                 });
 
 
@@ -204,7 +233,7 @@
                 
                 // Process server's response:
                 function reqListener () {
-                    console.log(this.responseText);
+                    lstor.setItem(filename, JSON.parse(this.responseText).id);
                 }
 
                 // Make POST request:
@@ -220,7 +249,7 @@
             function open_gist(gistid) {
                 console.log(gistid);
                 ace.edit("editor").setValue("");
-
+                
                 $.ajax({
                     url: 'https://api.github.com/gists/' + gistid,
                     type: 'GET',
@@ -242,4 +271,9 @@
                     });
                 }); // $.ajax
 
+            }
+
+            // Lookup the gist ID for a project name, and pass it to open_gist(gistid):
+            function open_project(projectName) {
+                open_gist(lstor.getItem(projectName));
             }
