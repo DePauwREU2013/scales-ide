@@ -243,3 +243,35 @@
                 }); // $.ajax
 
             }
+
+        saveFile = function() {
+        var contents = env.editor.getSession().getValue();
+
+        $.post("write.php", {contents: contents }, function() {
+            // add error checking
+            alert('successful save');
+        });
+
+        editor.commands.addCommand({
+            name: "save",
+            bindKey: {
+                win: "Ctrl-S",
+                mac: "Command-S",
+                sender: "editor|cli"
+            },
+            exec: function() {
+                saveFile();
+            }
+        });
+        editor2.commands.addCommand({
+            name: "save",
+            bindKey: {
+                win: "Ctrl-S",
+                mac: "Command-S",
+                sender: "editor|cli"
+            },
+            exec: function() {
+                saveFile();
+            }
+        });
+};
