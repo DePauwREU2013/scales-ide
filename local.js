@@ -50,7 +50,7 @@
 
                             // Append this project name to their list of projects
                             projectList = lstor.getItem('scales_projects');
-                            projectList += (", " + filename);
+                            projectList += ("," + filename);
                         } else {
 
                             // Otherwise, this project comprises their entire list.
@@ -278,7 +278,8 @@
 
 
                 oReq.open("post", "https://api.github.com/gists", true);
-                oReq.send('{"description": "New Scales Project", "public": "true","files": {"'+filename+'": {"content":"'+editor.getValue()+'"}}}');
+                var sendJSON = {description: "a file", public: true, files: {fname: {content: editor.getValue()}}};
+                oReq.send(JSON.stringify(sendJSON));
             } // create_gist
 
             // Open a Gist with the provided Gist ID (using a GET request)
