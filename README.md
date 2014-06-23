@@ -4,6 +4,10 @@ scales-ide
 A simple web-based IDE for media computation with Scala and the Scales library.
 
 ## To-do:
+###Local Storage
+* Key, Value pairs will map project names to their ever-changing gist IDs
+* Some data that is currently being handled by global variables should be moved to the localStorage object. 
+
 ###Implement "New File" so that users can add files to their current project.
 * Create UI element (button, link, etc.)
 * Prompt for new file name
