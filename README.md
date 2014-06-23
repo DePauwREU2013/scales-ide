@@ -13,9 +13,9 @@ A simple web-based IDE for media computation with Scala and the Scales library.
 ###Give each panel a context indicator.
 * It should be apparent which file is open in each editor (especially if there are blank files).
 
-###Implement Save.
-* Insert appropriate fields from the `global_gist_data` object into a `PATCH` request to Gist API.
-* Give user feedback on success/failure.
+###~~Implement Save.~~
+* ~~Insert appropriate fields from the `global_gist_data` object into a `PATCH` request to Gist API.~~
+* ~~Give user feedback on success/failure.~~
 
 ###Add a context for output.
 * List it in the draggable context/file list UI.
