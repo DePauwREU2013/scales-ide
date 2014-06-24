@@ -190,15 +190,27 @@
                     }
                 })
                 display_project_list();
-                
-                    editor.on("change", function(e) {
+
+                editor.on("change", function(e) {
                     try {
+                        editor.getSession().clearAnnotations();
                         parser.parse(editor.getValue());
                     } catch(exn) {
-                        console.log(exn);
-                    }
-                });
+                        if (!editor.getSession().$annotations) {
+                            editor.getSession().$annotations = new Array();
+                        }
 
+                        var myAnno = {
+                            "column": exn['column'],
+                            "row": exn['line']-1,
+                            "type": "error",
+                            "raw": exn['message'],
+                            "text": exn['message']
+                        };
+                        editor.getSession().$annotations.push(myAnno);
+                        editor.getSession().setAnnotations(editor.getSession().$annotations);
+                    }      
+                });
             }); // $(document).ready
                 
             function projectArray() {
