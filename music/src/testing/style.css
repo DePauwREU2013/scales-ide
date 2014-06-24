@@ -1,0 +1,19 @@
+* {
+	background: #121234;
+	color: white;
+	font: 1.05em/1.2em Monaco, Palatino Linotype, Helvetica;
+}
+
+#button {
+	background: #1ebcfa;
+	width: 200px;
+	height: 40px;
+	text-align: center;
+	margin: 0px auto;
+	display: block;
+	float: none;
+	padding: 20px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+}

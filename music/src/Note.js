@@ -46,14 +46,42 @@ function setProperties(NoteObj, note, volume) {
 }
 
 
-// plays the note immediately, or after delay@params
-Note.prototype.play() {
-
+/*
+** @params: plays note after delay,
+** or immediately if no argument
+*/
+Note.prototype.start(delay) {
+	if(this.loaded) {
+		var soundSource = context.createBufferSouce();
+		soundSource.buffer = this.buffer;
+		soundSource.connect(this.panner);
+		this.panner.connect(this.volume);
+		this.volume.connect(context.destination);
+		
+		// older systems may not support start()
+		try {
+			if(!delay) 
+				soundSource.start(0);
+			else
+				soundSource.start(delay);
+		}
+		catch(err) {
+			if(!delay)
+				soundSource.noteOn(0);
+			else
+				soundSource.noteOn(delay);
+		}
+	}
 }
 
-// immediately stops sound
-Note.prototype.stop() {
-
+/*
+** @params: sets gain for Note
+** @return: a new instance of the Note with set volume
+*/
+Note.prototype.setVolume(vol) {
+	var newNote = this;
+	newNote.volume.gain.value = vol;
+	return newNote;
 }
 
 // sets position of AudioListener and panner node
