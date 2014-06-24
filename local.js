@@ -190,6 +190,15 @@
                     }
                 })
                 display_project_list();
+                
+                    editor.on("change", function(e) {
+                    try {
+                        parser.parse(editor.getValue());
+                    } catch(exn) {
+                        console.log(exn);
+                    }
+                });
+
             }); // $(document).ready
                 
             function projectArray() {
