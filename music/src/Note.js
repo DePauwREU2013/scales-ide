@@ -4,9 +4,22 @@
 */
 
 
-// initializes a note (any sound), sets up audio context, loads sound
-function Note() {
+// @params: a library note (todo) or path to any sound
+// initializes by setting up audio context and loads sound into memory
+function Note(note) {
+	var context = new AudioContext();
+	var sound = this;
 
+	var soundReq = new XMLHttpRequest();
+	soundReq.open("GET", note, true);
+	soundReq.responseType = "arraybuffer";
+
+	soundReq.onload = function(){
+		context.decodeAudioData(soundReq.response, function(buffer)){
+			sound.buffer = buffer;
+		});
+	}
+	soundReq.send();
 }
 
 // sets attributes for note, such as oscillation, pan, etc.
