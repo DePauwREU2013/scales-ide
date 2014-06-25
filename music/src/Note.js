@@ -10,13 +10,13 @@
 ** initializes a new instance of Note by setting up 
 ** a context (if none exists), and loading the note
 */
-function Note(source, level) {
+function Note(source, volume) {
 	if(!window.context) {
 		context = new AudioContext();
 	}
 
 	var note = this;
-	settings(note, source, level);
+	settings(note, source, volume);
 
 	var req = new XMLHttpRequest();
 	req.open("GET", note.source, true);
@@ -35,14 +35,14 @@ function Note(source, level) {
 ** @params: the note and volume for NoteObj
 ** sets NoteObj's properties
 */
-function settings(note, source, level) {
+function settings(note, source, volume) {
 	note.source = source;
 	note.panner = context.createPanner();
 	note.volume = context.createGain();
 
 	note.buffer = null;
 	note.loaded = false;
-	note.volume.gain.value = (!level) ? 1 : level;
+	note.volume.gain.value = (!volume) ? 1 : volume;
 }
 
 
@@ -60,16 +60,12 @@ Note.prototype.play = function(delay) {
          
         // older systems (i.e IE) may not support start()
         try {
-        	if(!delay) 
-        		soundSource.start(0);
-        	else 
-        		soundSource.start(delay);
+        	if(!delay) soundSource.start(0);
+        	else soundSource.start(delay);
         }
         catch(err) {
-			if(!delay) 
-				soundSource.noteOn(0);
-			else 
-				soundSource.noteOn(delay);
+			if(!delay) soundSource.noteOn(0);
+			else soundSource.noteOn(delay);
 		} 
 	}
 }
@@ -78,9 +74,9 @@ Note.prototype.play = function(delay) {
 ** @params: sets gain for Note
 ** @return: a new instance of the Note with set volume
 */
-Note.prototype.setVolume = function(level) {
+Note.prototype.setVolume = function(volume) {
 	var newNote = this;
-	newNote.volume.gain.value = level;
+	if(volume) newNote.volume.gain.value = volume;
 	return newNote;
 }
 
