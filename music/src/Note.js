@@ -64,8 +64,8 @@ Note.prototype.play = function(delay) {
         	else soundSource.start(delay);
         }
         catch(err) {
-			if(!delay) soundSource.noteOn(0);
-			else soundSource.noteOn(delay);
+        	if(!delay) soundSource.noteOn(0);
+        	else soundSource.noteOn(delay);
 		} 
 	}
 }
