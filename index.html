@@ -9,10 +9,12 @@
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
         <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
         <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"></script>
+        <script src="dist/jstree.js"></script>
         <script type="text/javascript" src="sassy_messages.js"></script>
         <script type="text/javascript" src="local.js"></script>
 
         <!-- Load stylesheets -->
+        <link rel="stylesheet" href="dist/themes/default/style.css" />
         <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" />
         <link rel="stylesheet" type="text/css" href="style-ace.css" />
 
@@ -21,21 +23,27 @@
         <!-- File management buttons -->
 
         <div id="context-list">
-            <div id="toolbar">
-                <button id="create">Create</button><br />
-                <button id="open-gist">Open</button><br />
-                <label for="open-file">Open Files:</label>
-                <input type="file" name="open-file" id="openLocalFile" /><br />
-                <button id="save">Save</button><br />
-            </div>
-            <ul class="project-tree">
-                <div id="project-name">No Project</div>
-                <ul id="file-list">
-
-                </ul>
-                <div id="project-list-header">Projects:</div>
-                <ul id="project-list">
-                
+            <div id="jstree_demo_div">
+                <ul>
+                    <li>Assignment 1
+                        <ul>
+                            <li id="src">src
+                                <ul>
+                                    <li id="main_scala">main.scala</li>
+                                </ul>
+                            </li>
+                            <li id="resources">resources
+                                <ul>
+                                    <li id="scales_lib">scales-lib
+                                        <ul>
+                                            <li id="scales_scala">scales.scala</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>Assignment 2</li>
                 </ul>
             </div>
         </div>

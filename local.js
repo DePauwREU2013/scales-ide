@@ -147,7 +147,7 @@
 
                 }
                 
-                document.getElementById('openLocalFile').addEventListener('change', readFile, false);
+                // document.getElementById('openLocalFile').addEventListener('change', readFile, false);
 
 
                 // Make context-list resizable:
@@ -218,6 +218,11 @@
                         editor.getSession().$annotations.push(myAnno);
                         editor.getSession().setAnnotations(editor.getSession().$annotations);
                     }      
+                });
+
+                $('#jstree_demo_div').jstree();
+                $('#jstree_demo_div').on("changed.jstree", function(e, data) {
+                    console.log(data.selected);
                 });
             }); // $(document).ready
                 
