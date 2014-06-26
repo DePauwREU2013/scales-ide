@@ -6,12 +6,39 @@
 		<meta charset="utf-8" />
 		<title>Note - WAA</title>
 		<link rel="stylesheet" type="text/css" href="style.css" />
-		<script type="text/javascript" src="Note.js"></script>
-		<script type="text/javascript" src="TestingNote.js"></script>
+		<script type="text/javascript" src="../Note.js"></script>
+		<script type="text/javascript" src="NoteTesting.js"></script>
 	</head>
-	<body onload="enableSounds()">
+	<body onload="alertMe()">
 		<div id="contents">
-			<!--todo: add contents-->
+         <h4>Sample of code: </h4>
+         var atone = new Note("atone", .7); <br />
+         var ding = new Note("ding"); <br />
+         var louderDing = ding.setVolume(5); <br />
+         var cam = new Note("camera").setVolume(.5); <br />
+         <br />
+         atone.play(); <br />
+         louderDing.play(3); <br />
+         ding.play(5); <br />
+         ding.play(7); <br />
+         cam.play(9); <br />
+
+         <div id="button">
+				Click me to play sounds!
+			</div>
+            
+            <h4>Todo: </h4>
+            <ul>
+            	<li>Integrate with Scala.js</li>
+            	<li>More methods, such as:
+               		<ul>
+               			<li>Play sounds in parallel</li>
+               			<li>Stretch / compress sounds</li>
+               			<li>Repeat</li>
+               		</ul>
+            	</li>
+            	<li>...etc., etc.</li>
+            </ul>  
 		</div>
 	</body>	
 </html>

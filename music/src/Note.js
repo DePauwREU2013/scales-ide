@@ -4,83 +4,135 @@
 ** connecting nodes.
 */
 
-
 /* 
-** @params: a library note (todo) or path to any sound
+** @params: a library note or url path to any sound
 ** initializes a new instance of Note by setting up 
 ** a context (if none exists), and loading the note
 */
-function Note(source, volume) {
+function Note(source, level) {
 	if(!window.context) {
 		context = new AudioContext();
 	}
 
-	var note = this;
-	settings(note, source, volume);
+	try {
+ 	var that = this;
+ 		settings(that, source, level);
 
-	var req = new XMLHttpRequest();
-	req.open("GET", note.source, true);
-	req.responseType = "arraybuffer";
+        var req = new XMLHttpRequest();
+		req.open("GET", that.source, true);
+		req.responseType = "arraybuffer";
 
-	req.onload = function() {
-		context.decodeAudioData(req.response, function(buffer) {
-			note.buffer = buffer;
-			note.loaded = true;
-		});
-	}
-	req.send();
+		req.onload = function() {
+			context.decodeAudioData(req.response, function(buffer) {
+				that.buffer = buffer;
+				that.isLoaded = true;
+			});
+		}
+		req.send();    
+	} catch(err) {
+		s = "Whoopsie daisy: " + source;
+		alert(s);    
+	} 
 }
+
 
 /*
 ** @params: the note and volume for NoteObj
 ** sets NoteObj's properties
 */
-function settings(note, source, volume) {
-	note.source = source;
-	note.panner = context.createPanner();
-	note.volume = context.createGain();
-
-	note.buffer = null;
-	note.loaded = false;
-	note.volume.gain.value = (!volume) ? 1 : volume;
+function settings(that, source, level) {
+	var s = findNote(source);
+	that.source = s;
+	that.buffer = null;
+	that.isLoaded = false;
+	that.panner = context.createPanner();
+	that.volume = context.createGain();
+	that.volume.gain.value = (!level) ? 1 : level;
 }
 
-
 /*
-** @params: plays note after delay,
-** or immediately if no argument
+** @params: key for note's source path 
+** if source path not found, returns params
 */
-Note.prototype.play = function(delay) {
-	if(this.loaded === true) {
-		var soundSource = context.createBufferSource();
-		soundSource.buffer = this.buffer;
-		soundSource.connect(this.panner);
-		this.panner.connect(this.volume);
-		this.volume.connect(context.destination);
-         
-        // older systems (i.e IE) may not support start()
-        try {
-        	if(!delay) soundSource.start(0);
-        	else soundSource.start(delay);
-        }
-        catch(err) {
-        	if(!delay) soundSource.noteOn(0);
-        	else soundSource.noteOn(delay);
-		} 
+function findNote(url) {
+	switch(url) {
+		case 'camera':
+			return "../../audio/standard/camera.wav";
+			break;
+		case 'ding':
+			return "../../audio/standard/air-plane-ding.mp3";
+			break;
+		case 'atone':
+			return "../../audio/standard/a-tone.mp3";
+			break;
+		default:
+			return url;
 	}
 }
 
 /*
-** @params: sets gain for Note
-** @return: a new instance of the Note with set volume
+** @params: plays note after delay (seconds)
+** or immediately if no argument
 */
-Note.prototype.setVolume = function(volume) {
-	var newNote = this;
-	if(volume) newNote.volume.gain.value = volume;
-	return newNote;
+Note.prototype.play = function(delay) {
+	if(this.isLoaded === true) {
+		var player = context.createBufferSource();
+		player.buffer = this.buffer;
+		player.connect(this.panner);
+		this.panner.connect(this.volume);
+		this.volume.connect(context.destination);
+
+		if(!delay) {
+        	player.start(0);
+        } else player.start(delay);
+    }
 }
 
-// sets position of AudioListener and panner node
-Note.prototype.setListenerEnvironment() {
+/*
+** @params: stops source after delay (seconds) 
+** or immediately if no arguments
+*/
+Note.prototype.stop = function(delay) {
+	//TODO
+}
 
+/*
+** @params: repeats sound given times, or once if invalid params
+*/
+Note.prototype.repeat = function(times) {
+	//TODO
+}
+
+/*
+** @params: sets gain (volume) for Note at time
+** @return: a new instance of the Note with set volume
+*/
+Note.prototype.setVolume = function(level) {
+	var newNote = this;
+	newNote.volume.gain.value = level;
+	return newNote;
+    
+    //TODO: fix this so that it can set volume properly!
+//    var newNote = new Note(this.source);
+//    newNote.setVolume(level);
+//    return newNote;
+}
+
+/*
+** TODO: look into this some more
+*/
+Note.prototype.oscillate = function() {
+	//TODO
+}
+
+/*
+** TODO
+** @params: changes note by delta 
+*/
+Note.prototype.changeOctave = function(delta) {
+	//TODO
+}
+
+Note.prototype.setPan = function(xValue) {
+	this.panner.setPosition(xValue, 0, 0);
 }

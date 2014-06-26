@@ -4,16 +4,43 @@
 	font: 1.05em/1.2em Monaco, Palatino Linotype, Helvetica;
 }
 
+#contents {
+	background: white;
+	font-size: 15px;
+	color: black;
+	width: 600px;
+	height: 100%;
+	padding: 10px;
+	margin: 40px;
+}
+
+h4, ul {
+	background: white;
+	color: navy;
+	text-align: center;
+}
+
+li {
+	background: white;
+	color: navy;
+	text-align: left;
+	font-size: 14px;
+	padding: 2px;
+}
+
 #button {
+	position: absolute;
+	top: 200px;
+	left: 400px;
 	background: #1ebcfa;
 	width: 200px;
 	height: 40px;
 	text-align: center;
-	margin: 0px auto;
+	margin: 0px;
 	display: block;
-	float: none;
+	float: right;
 	padding: 20px;
-    -webkit-border-radius: 10px;
-    -moz-border-radius: 10px;
-    border-radius: 10px;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px;
 }
