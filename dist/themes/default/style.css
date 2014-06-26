@@ -525,7 +525,8 @@
   background: url("throbber.gif") center center no-repeat;
 }
 .jstree-default .jstree-file {
-  background: url("32px.png") -100px -68px no-repeat;
+  background: url("../../../../icons/file_code.png") -100px -68px no-repeat !mportant;
+
 }
 .jstree-default .jstree-folder {
   background: url("32px.png") -260px -4px no-repeat;

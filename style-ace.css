@@ -8,8 +8,8 @@
     bottom: 0;
     left: 0;
     width: 15em; 
-    background-color: #272822; /* from ace-monokai */
-    color: white;
+    background-color: #272822;
+    color: #f8f8f2;
     padding: .2em;
     font-family: 'Monaco','Menlo','Ubuntu Mono','Consolas','source-code-pro',monospace;
 }
