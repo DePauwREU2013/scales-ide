@@ -15,13 +15,21 @@
                 editor.setTheme('ace/theme/monokai');
                 editor.getSession().setMode('ace/mode/scala');
 
-                editor.setOption("wrap","free");                
+                editor.setOption("wrap","free");     
+                var valstr = "val myVal: Int = 3";
+                for (var i = 0; i < 100; i++) {
+                    valstr.concat(" \n");
+                }           
+                editor.setValue(valstr);
 
                 // Turn the right editor div (#editor2) into an Ace editor:
                 editor2 = ace.edit('editor2');
-                editor2.setTheme('ace/theme/monokai');
-                editor2.getSession().setMode('ace/mode/scala');
-                
+                editor2.setTheme('ace/theme/chrome');
+                editor2.getSession().setMode('ace/mode/text');
+
+                editor2.setValue("Over in the left editor, try out some simple variable declarations.\
+                    \n\nThen try some no-no's. Make it a var, or try one of a few recognized reserved words for your identifier. How about a val, but don't assign anything. What if you tried to assign something, but forgot the integer at the end? Better yet, what if got that part, but forgot the friggin' equals sign?\
+                    \n\nBy the way, the recognized type names: Int, Float, String, Unit...but we're only assigning integers at the moment. . . and I'm not allowed to build a type system.");                
             
 
                 editor2.setOption("wrap","free");                
