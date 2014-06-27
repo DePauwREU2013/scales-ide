@@ -68,6 +68,15 @@
     left: 0;
 }
 
+#current-file {
+	position: absolute;
+	bottom: .5em;
+	padding-right: 2em;
+	font-family: "Consolas","source-code-pro","Monaco","Menlo","Ubuntu Mono",monospace;
+	color: gray;
+	font-size: small;
+}
+
 .ui-resizable-e {
 	cursor: e-resize;
 	width: 10px;

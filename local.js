@@ -184,12 +184,11 @@ $(document).ready(function() {
 	// remainder of div#panels:
 	    $('#autodiv').css("left", $("#resizable").css("width"));
 	    $('#autodiv').css("right", "0");
+		$('#current-file').css('right',$('#resizable').css('right'));
 	
 	// Notify Ace to update its size:
 	    editor2.resize();
 	  }); 
-	
-	// $("#resizable").resize
 	
 	
 	// Make the panels received drag & dropped items:
@@ -233,7 +232,8 @@ $(document).ready(function() {
 	  $('#tree').fancytree({
 	  	extensions: ["themeroller"]
 	  });
- 
+ 	$('#current-file').css('right', $('#resizable').css('right'));
+
 }); // $(document).ready
 
 function projectArray() {
