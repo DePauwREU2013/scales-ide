@@ -8,29 +8,32 @@
 <!--        <script src="http://cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/ace.js" type="text/javascript" charset="utf-8"></script> -->
 		<script src="http://cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/ace.js"></script>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-        <script src="jquery-ui-1.11.0.custom/jquery-ui.js"></script>
+        <script src="./jquery-ui-1.11.0.custom/jquery-ui.js"></script>
         <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"></script>
-        <script src="fancytree/jquery.fancytree.js"></script>
-        <script src="fancytree/jquery.fancytree.themeroller.js"></script>
+        <script src="./fancytree/jquery.fancytree.js"></script>
+        <script src="./fancytree/jquery.fancytree.themeroller.js"></script>
         
         <script type="text/javascript" src="sassy_messages.js"></script>
         <script type="text/javascript" src="local.js"></script>
 
         <!-- Load stylesheets -->
-        <link rel="stylesheet" href="jquery-ui-1.11.0.custom/jquery-ui.min.css" />
-        <link rel="stylesheet" href="fancytree/skin-themeroller/ui.fancytree.css" />
+        <link rel="stylesheet" href="./jquery-ui-1.11.0.custom/jquery-ui.min.css" />
+        <link rel="stylesheet" href="./fancytree/skin-themeroller/ui.fancytree.css" />
         
         <link rel="stylesheet" type="text/css" href="style-ace.css" />
 		<style>
 			.ui-state-hover {border: 1px solid #272822 !important;
 							font-weight: normal !important;}
-	
+			#context-list {
+				font-size: smaller;
+			}
 		</style>
     </head>
     <body>
         <!-- File management buttons -->
 
         <div id="context-list">
+        	<div id="context-heading" class="fancytree-active ui-widget ui-widget-content">Project Explorer:</div>
             <div id="tree" style="border:none;">
                 <ul id="treeData" style="display: none; border: none;">
                     <li id="id1" class="folder expanded">New Project

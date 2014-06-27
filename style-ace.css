@@ -7,11 +7,17 @@
     top: 0;
     bottom: 0;
     left: 0;
-    width: 15em; 
+    width: 200px; 
     background-color: #272822;
     color: #f8f8f2;
     padding: .2em;
     font-family: 'Monaco','Menlo','Ubuntu Mono','Consolas','source-code-pro',monospace;
+}
+
+#context-heading {
+	border-top: none;
+	margin-left: -4px;
+	padding: 5px;
 }
 
 #panels {
@@ -19,7 +25,7 @@
     top: 0;
     right: 0px;
     bottom: 0px;
-    left: 15em;
+    left: 190px;
 }
 .panel {
     position: absolute;

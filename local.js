@@ -157,7 +157,7 @@ $(document).ready(function() {
 	
 	// Automatically resize the panels to the right:
 	  $('#context-list').on("resize", function() {
-	    $('#panels').css('left', $('#context-list').css('width'));
+	    $('#panels').css('left', parseInt($('#context-list').css('width'))-10 + 'px');
 	  });
 	
 	// Set resizable container for left Ace editor:
