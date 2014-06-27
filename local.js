@@ -155,7 +155,7 @@ $(document).ready(function() {
 
 	$('#header').resize( function() {
 		$('#panels').css('top', parseInt($(this).css('height')) + 9 + "px");
-		$('#context-list').css('top', $(this).css('height'));
+		$('#context-list').css('top', parseInt($(this).css('height')) + 9 + "px");
 	});
 	
 	// Make context-list resizable:
