@@ -87,9 +87,13 @@
 	background-position: center;
 	background-repeat: no-repeat;
 	background-color: gray;
+	back
 }
 
 .ui-resizable-s {
+	background-image: url(resources/images/grabber-horiz.svg);
+	background-position: center;
+	background-repeat: no-repeat;
 	background-color: gray;
 	height: 8px;
 	bottom: -10px;
