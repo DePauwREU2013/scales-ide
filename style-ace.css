@@ -2,9 +2,16 @@
     display: none;    
 }
 
+#header {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 30px;
+}
 #context-list {
     position: absolute;
-    top: 0;
+    top: 39px;
     bottom: 0;
     left: 0;
     width: 200px; 
@@ -22,7 +29,7 @@
 
 #panels {
     position: absolute;
-    top: 0;
+    top: 39px;
     right: 0px;
     bottom: 0px;
     left: 190px;
@@ -62,15 +69,21 @@
 }
 
 .ui-resizable-e {
-cursor: e-resize;
-width: 10px;
-right: -5px;
-top: 0;
-height: 100%;
-background-image: url(resources/images/grabber.svg);
-background-position: center;
-background-repeat: no-repeat;
-background-color: gray;
+	cursor: e-resize;
+	width: 10px;
+	right: -5px;
+	top: 0;
+	height: 100%;
+	background-image: url(resources/images/grabber.svg);
+	background-position: center;
+	background-repeat: no-repeat;
+	background-color: gray;
+}
+
+.ui-resizable-s {
+	background-color: gray;
+	height: 8px;
+	bottom: -10px;
 }
 
 ul.project-tree {

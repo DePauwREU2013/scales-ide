@@ -149,6 +149,14 @@ $(document).ready(function() {
 	
 	// document.getElementById('openLocalFile').addEventListener('change', readFile, false);
 	
+	$('#header').resizable({
+		handles: "s",
+	});
+
+	$('#header').resize( function() {
+		$('#panels').css('top', parseInt($(this).css('height')) + 9 + "px");
+		$('#context-list').css('top', $(this).css('height'));
+	});
 	
 	// Make context-list resizable:
 	  $('#context-list').resizable( {
