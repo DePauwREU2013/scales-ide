@@ -21,21 +21,20 @@ $(document).ready(function() {
 	    valstr.concat(" \n");
 	  }
 	  editor.setValue(valstr);
+
+	// Set the canvas' html attributes 'width' and 'height' to be the same as 
+	// its parent container's css attributes for 'width' and 'height'.
+	//
+	// Changing the canvas' css attributes directly seems to stretch the image.
 	
-	// Turn the right editor div (#editor2) into an Ace editor:
-	  editor2 = ace.edit('editor2');
-	  editor2.setTheme('ace/theme/chrome');
-	  editor2.getSession().setMode('ace/mode/text');
-	
-	  editor2.setValue("Over in the left editor, try out some simple variable declarations.\
-	\n\nThen try some no-no's. Make it a var, or try one of a few recognized reserved words for your identifier. How about a val, but don't assign anything. What if you tried to assign something, but forgot the integer at the end? Better yet, what if got that part, but forgot the friggin' equals sign?\
-	\n\nBy the way, the recognized type names: Int, Float, String, Unit...but we're only assigning integers at the moment. . . and I'm not allowed to build a type system.");
-	
-	
-	  editor2.setOption("wrap", "free");
-	
-	// Set up toolbar button events
-	
+	 
+	$('canvas').attr('width', $('#autodiv').css('width'));
+	$('canvas').attr('height', $('#autodiv').css('height'));
+	render();
+
+
+
+
 	// Create new file
 	  $('#create').click( function() {
 	    var filename = prompt("Please enter the name of your project:");
@@ -155,7 +154,12 @@ $(document).ready(function() {
 
 	$('#header').resize( function() {
 		$('#panels').css('top', parseInt($(this).css('height')) + 9 + "px");
+		$('#autodiv').css("left", $("#resizable").css("width"));
+	    $('#autodiv').css("right", "0");
 		$('#context-list').css('top', parseInt($(this).css('height')) + 9 + "px");
+		$('canvas').attr('width', $('#autodiv').css('width'));
+		$('canvas').attr('height', $('#autodiv').css('height'));
+		render();
 	});
 	
 	// Make context-list resizable:
@@ -166,6 +170,9 @@ $(document).ready(function() {
 	// Automatically resize the panels to the right:
 	  $('#context-list').on("resize", function() {
 	    $('#panels').css('left', parseInt($('#context-list').css('width'))-10 + 'px');
+	    $('canvas').attr('width', $('#autodiv').css('width'));
+		$('canvas').attr('height', $('#autodiv').css('height'));
+	  	render();
 	  });
 	
 	// Set resizable container for left Ace editor:
@@ -185,9 +192,10 @@ $(document).ready(function() {
 	    $('#autodiv').css("left", $("#resizable").css("width"));
 	    $('#autodiv').css("right", "0");
 		$('#current-file').css('right',$('#resizable').css('right'));
-	
-	// Notify Ace to update its size:
-	    editor2.resize();
+		$('canvas').attr('width', $('#autodiv').css('width'));
+		$('canvas').attr('height', $('#autodiv').css('height'));
+		render();
+    	
 	  }); 
 	
 	
@@ -263,12 +271,6 @@ function display_project_list() {
 function load_file(parent_id) {
   if (parent_id == "resizable") {
 
-// If it's open in the other editor, close it there first:
-    if (file_tracker.inright == active_file) {
-      file_tracker.inright = null;
-      editor2.setValue("");
-    }
-
 // Keep track of where the file is loaded
     file_tracker.inleft = active_file;
 
@@ -295,15 +297,7 @@ function load_file(parent_id) {
 
 
     file_tracker.inright = active_file;
-    editor2.setValue(global_gist_data.data.files[active_file].content);
-    editor2.on('change', function() {
-
-      if (file_tracker.inright) {
-        global_gist_data.data.files[file_tracker.inright].content =
-          editor2.getValue();
-      }
-    });
-  }
+    }
 }
 
 
@@ -372,4 +366,11 @@ function open_project(projectName) {
     alert("Cannot find project named, " + projectName + ".");
 
   }
+}
+
+function render() {
+	var c = document.querySelector('canvas');
+	var ctx = c.getContext("2d");
+	ctx.fillStyle = "#FF0000";
+	ctx.fillRect(0,0,50,50);
 }

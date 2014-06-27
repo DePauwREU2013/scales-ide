@@ -63,9 +63,13 @@
     /*margin-left: 5px;*/
 }
 
-#editor2 {
-    right: 0;
-    left: 0;
+canvas {
+	
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
 }
 
 #current-file {
@@ -87,7 +91,6 @@
 	background-position: center;
 	background-repeat: no-repeat;
 	background-color: gray;
-	back
 }
 
 .ui-resizable-s {
