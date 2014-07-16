@@ -8,9 +8,7 @@ var lstor = window.localStorage;
 var context_pinned = false;
 // jQuery
 $(document).ready(function() {
-
-	
-	// Turn the left editor div (#editor) into an Ace editor:
+{	// Turn the left editor div (#editor) into an Ace editor:
 	  editor = ace.edit('editor');
 	  editor.setTheme('ace/theme/monokai');
 	  editor.getSession().setMode('ace/mode/scala');
@@ -21,20 +19,16 @@ $(document).ready(function() {
 	    valstr.concat(" \n");
 	  }
 	  editor.setValue(valstr);
-
-	// Set the canvas' html attributes 'width' and 'height' to be the same as 
+}
+	
+{// Set the canvas' html attributes 'width' and 'height' to be the same as 
 	// its parent container's css attributes for 'width' and 'height'.
 	//
 	// Changing the canvas' css attributes directly seems to stretch the image.
-	
-	 
 	$('canvas').attr('width', $('#autodiv').css('width'));
 	$('canvas').attr('height', $('#autodiv').css('height'));
 	render();
-
-
-
-
+}
 	// Create new file
 	  $('#create').click( function() {
 	    var filename = prompt("Please enter the name of your project:");
@@ -148,6 +142,7 @@ $(document).ready(function() {
 	
 	// document.getElementById('openLocalFile').addEventListener('change', readFile, false);
 	
+{ 	// jQuery UI (resizable, droppable, etc.)
 	$('#header').resizable({
 		handles: "s",
 	});
@@ -213,8 +208,8 @@ $(document).ready(function() {
 	      console.log(this);
 	    }
 	  })
-	  display_project_list();
-	
+}	
+	  // Syntax checking/error reporting
 	  editor.on("change", function(e) {
 	    try {
 	      editor.getSession().clearAnnotations();
