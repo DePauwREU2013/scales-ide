@@ -21,6 +21,11 @@
     font-family: 'Monaco','Menlo','Ubuntu Mono','Consolas','source-code-pro',monospace;
 }
 
+.menu {
+    list-style-type: none;
+    padding-left: .7em;
+}
+
 #context-heading {
 	border-top: none;
 	margin-left: -4px;
@@ -106,9 +111,4 @@ ul.project-tree {
     list-style-type: none;
     padding: .5em;
     padding-left: 1em;
-}
-
-#file-list {
-    list-style-type: none;
-    padding-left: .7em;
 }
