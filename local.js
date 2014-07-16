@@ -5,6 +5,7 @@ var file_tracker = {
 };
 var debugData;
 var lstor = window.localStorage;
+var globalProjectList = JSON.parse(lstor.getItem("scales_projects"));
 var context_pinned = false;
 // jQuery
 $(document).ready(function() {
@@ -63,7 +64,7 @@ $(document).ready(function() {
 	
 	// Create a gist with the new project name.
 	      create_gist(filename);
-	      display_project_list();
+	      
 	    }
 	  });
 	
@@ -231,35 +232,32 @@ $(document).ready(function() {
 	      editor.getSession().setAnnotations(editor.getSession().$annotations);
 	    }
 	  });
-	  
+
 	  $('#tree').fancytree({
+	  		
+			source: {url: "./tree.json", cache: false},
+			
 	  	extensions: ["themeroller"]
 	  });
+	  
  	$('#current-file').css('right', $('#resizable').css('right'));
-
+	build_tree_json();
 }); // $(document).ready
 
-function projectArray() {
-// If there are projects listed in local storage:
-  if (lstor.getItem("scales_projects")) {
 
-// Parse the list into an array:
-    return $.csv.toArray(lstor.getItem('scales_projects'));
-  } else {
-// Otherwise, make projectArray a new, empty Array:
-    return new Array();
-  }
-
-}
-// Displays the list of user's projects in the context window:
-function display_project_list() {
-  var pArray = projectArray();
-
-  $('#project-list').empty();
-// List all the projects in the context-list:
-  for (var project in pArray) {
-    $('#project-list').append('<li id="' + pArray[project] + '"">' + pArray[project] + '</li>');
-  }
+// Build JSON for file tree:
+function build_tree_json() {
+	// Create the empty array:
+	var tree_object = [];
+	var nextNodeID = 1;
+	// Populate it with nodes for each project:
+	for (var p in globalProjectList) {
+		var projectId = p;
+		var projectName = globalProjectList[p];
+		
+		tree_object.push({"title": projectName, "key": nextNodeID++});
+		console.log(tree_object);
+	}
 }
 
 // Load file content into editor
