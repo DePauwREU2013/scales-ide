@@ -235,29 +235,51 @@ $(document).ready(function() {
 
 	  $('#tree').fancytree({
 	  		
-			source: {url: "./tree.json", cache: false},
+			source: [{"title":"Project1","key":"1","folder":true,"children":[{"title":"main.scala","key":"2","contents":"thisisthecontentsofthefile","language":"scala"},{"title":"libscales.scala","key":"3","contents":"itscales!","language":"scala"}]},{"title":"Project2","key":"4","folder":true,"children":[{"title":"main.scala","key":"5","contents":"thisisthecontentsofthefile","language":"scala"},{"title":"libscales.scala","key":"6","contents":"itscales!","language":"scala"}]}],
+			activate: function(event, data){
+				// A node was activated: display its title:
+				
+				var node = data.node;
+				alert(node.title);
+			},
 			
 	  	extensions: ["themeroller"]
 	  });
 	  
  	$('#current-file').css('right', $('#resizable').css('right'));
-	build_tree_json();
+	
 }); // $(document).ready
-
 
 // Build JSON for file tree:
 function build_tree_json() {
-	// Create the empty array:
+		// Create the empty array:
 	var tree_object = [];
 	var nextNodeID = 1;
+	
 	// Populate it with nodes for each project:
 	for (var p in globalProjectList) {
 		var projectId = p;
 		var projectName = globalProjectList[p];
+		var fileList = JSON.parse(lstor[projectName]).files;
+
+		// Populate the project nodes (folders):
+		tree_object.push({"title": projectName, "key": nextNodeID++, "folder": true});
+		tree_object[projectId].children = []
 		
-		tree_object.push({"title": projectName, "key": nextNodeID++});
+		// Populate the project nodes (folders) with file nodes:
+		for (var f in fileList) {
+			var childObject = [];
+			childObject.title = fileList[f];
+			childObject.key = nextNodeID++;
+
+			tree_object[projectId].children += childObject;
+					
+			console.log(fileList[f]);
+		}
+
 		console.log(tree_object);
 	}
+	return tree_object;
 }
 
 // Load file content into editor
