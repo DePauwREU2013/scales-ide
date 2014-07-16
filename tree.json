@@ -1,14 +1,40 @@
 [
 	{
 		"title": "Project 1",
-		"key": "1"
+		"key": "1",
+		"folder": true,
+		"children": [
+			{
+				"title": "main.scala",
+				"key": "2",
+				"contents": "this is the contents of the file",
+				"language": "scala"
+			},
+			{
+				"title": "libscales.scala",
+				"key": "3",
+				"contents": "it scales!",
+				"language": "scala"
+			}
+		]
 	},
- 	{
- 		"title": "Folder 2", 
- 		"key": "2", "folder": true,
- 	 	"children": [
-    		{"title": "New Node 2.1", "key": "3"},
-    		{"title": "Node 2.2", "key": "4"}
-  		]
-  	}
-]
+	{
+		"title": "Project 2",
+		"key": "4",
+		"folder": true,
+		"children": [
+			{
+				"title": "main.scala",
+				"key": "5",
+				"contents": "this is the contents of the file",
+				"language": "scala"
+			},
+			{
+				"title": "libscales.scala",
+				"key": "6",
+				"contents": "it scales!",
+				"language": "scala"
+			}
+		]
+	}
+]	
