@@ -247,7 +247,8 @@ $(document).ready(function() {
  	 * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 	$('.icon-folder').click( function() {
-		workspace_object.push( Object(new Project( prompt ("Choose a name for this project:") ) ) );	
+		var project_name =  prompt ("Choose a name for this project:")
+		workspace_object.push(new Project(project_name) );	
 		load_file_tree();
 	});
 
