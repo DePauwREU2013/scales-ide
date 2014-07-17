@@ -2,6 +2,7 @@
 
 var active_file;
 var debugData;
+var tree;
 
 // Local Storage
 var lstor = window.localStorage;
@@ -252,7 +253,14 @@ $(document).ready(function() {
 	$('.icon-folder').click( function() {
 		var project_name =  prompt ("Choose a name for this project:")
 		workspace_object.push(new Project(project_name) );	
-		load_file_tree();
+		tree.reload();
+		workspace_object[workspace_object.length-1].children.push({
+			"title": "main.scala",
+			"key": tree.count() + 1,
+			"language": "scala",
+			"content": ""
+		});
+		tree.reload();
 	});
 
 	$('.icon-file').click( function() {
@@ -273,47 +281,28 @@ $(document).ready(function() {
 }); // $(document).ready
 
 function load_file_tree() {
-$('#tree').fancytree({
-	  		
-			source: workspace_object,
-			// [{"title":"Project1","key":"1","folder":true,"children":[{"title":"main.scala","key":"2","contents":"this is the contents of the file","language":"scala"},{"title":"libscales.scala","key":"3","contents":"itscales!","language":"scala"}]},{"title":"Project2","key":"4","folder":true,"children":[{"title":"main.scala","key":"5","contents":"thisisthecontentsofthefile","language":"scala"},{"title":"libscales.scala","key":"6","contents":"itscales!","language":"scala"}]}],
-			activate: function(event, data){
-				// A node was activated: display its title:
-				
-				var node = data.node;
+	$('#tree').fancytree({  		
+		source: workspace_object,
+		// [{"title":"Project1","key":"1","folder":true,"children":[{"title":"main.scala","key":"2","contents":"this is the contents of the file","language":"scala"},{"title":"libscales.scala","key":"3","contents":"itscales!","language":"scala"}]},{"title":"Project2","key":"4","folder":true,"children":[{"title":"main.scala","key":"5","contents":"thisisthecontentsofthefile","language":"scala"},{"title":"libscales.scala","key":"6","contents":"itscales!","language":"scala"}]}],
+		activate: function(event, data){
+			// A node was activated: display its title:
 			
-				editor.setValue(node.data.contents);
-				console.dir(node);
-			},
-			
-	  	extensions: ["themeroller"]
+			var node = data.node;
+		
+			editor.setValue(node.data.contents);
+			console.dir(node);
+		}, 
+		extensions: ["themeroller"]
 	  });
+	tree  = $("#tree").fancytree("getTree");
 }
 
+// Project constructor:
 function Project(projectName) {
 	this.title = projectName;
-	this.key = count_nodes() + 1;
+	this.key = tree.count() + 1;
 	this.folder = true;
-	this.children = [
-		{
-			"title": "main.scala",
-			"key": count_nodes() + 1,
-			"language": "scala",
-			"content": ""
-		}
-	];
-}
-
-function count_nodes() {
-	var nodeCount = 0;
-	for (var p in workspace_object) {
-		nodeCount++;
-
-		for (var f in workspace_object[p].children) {
-			nodeCount++;
-		}
-	}
-	return nodeCount;
+	this.children = [];
 }
 
 function render() {
