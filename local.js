@@ -16,19 +16,7 @@ var workspace_object = JSON.parse(lstor.getItem("scales_workspace"));
 // jQuery
 $(document).ready(function() {
 	
-
-	// Turn the left editor div (#editor) into an Ace editor:
-	  editor = ace.edit('editor');
-	  editor.setTheme('ace/theme/monokai');
-	  editor.getSession().setMode('ace/mode/scala');
-	
-	  editor.setOption("wrap", "free");
-	  var valstr = "val myVal: Int = 3";
-	  for (var i = 0; i < 100; i++) {
-	    valstr.concat(" \n");
-	  }
-	  editor.setValue(valstr);
-
+	init_ace();
 	
 	// Set the canvas' html attributes 'width' and 'height' to be the same as 
 	// its parent container's css attributes for 'width' and 'height'.
@@ -215,4 +203,16 @@ function render() {
 
 function init_workspace() {
 	lstor.setItem("scales_workspace","[{\"title\":\"Hello World\",\"key\":\"1\",\"folder\":true,\"children\":[{\"title\":\"main.scala\",\"key\":\"2\",\"contents\":\"this is the contents of the file\",\"language\":\"scala\"},{\"title\":\"libscales.scala\",\"key\":\"3\",\"contents\":\"itscales!\",\"language\":\"scala\"}]},{\"title\":\"Goodbye Cruel World\",\"key\":\"4\",\"folder\":true,\"children\":[{\"title\":\"main.scala\",\"key\":\"5\",\"contents\":\"thisisthecontentsofthefile\",\"language\":\"scala\"},{\"title\":\"libscales.scala\",\"key\":\"6\",\"contents\":\"itscales!\",\"language\":\"scala\"}]}]");
+}
+
+function init_ace() {
+	// Turn the editor div (#editor) into an Ace editor:
+	editor = ace.edit('editor');
+	editor.setTheme('ace/theme/monokai');
+	editor.getSession().setMode('ace/mode/scala');
+
+	// Wrap text based on size of editor panel:
+	var valstr = "// Welcome to the Scales IDE.";
+	editor.setValue(valstr);
+	editor.setOption("wrap", "free");
 }
