@@ -5,7 +5,9 @@ var file_tracker = {
 };
 var debugData;
 var lstor = window.localStorage;
-var globalProjectList = JSON.parse(lstor.getItem("scales_projects"));
+if (!lstor.getItem("scales_workspace")) {
+	init_workspace();
+}
 var workspace_object = JSON.parse(lstor.getItem("scales_workspace"));
 // jQuery
 $(document).ready(function() {
@@ -233,7 +235,41 @@ $(document).ready(function() {
 	    }
 	  });
 
-	  $('#tree').fancytree({
+	  load_file_tree();
+
+	  
+	  
+ 	$('#current-file').css('right', $('#resizable').css('right'));
+
+
+ 	/*Toolbar events * * * * * * * * * * * * * * * * * * * * 
+ 	 *                                                     *
+ 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+	$('.icon-folder').click( function() {
+		workspace_object.push( Object(new Project( prompt ("Choose a name for this project:") ) ) );	
+		load_file_tree();
+	});
+
+	$('.icon-file').click( function() {
+		// New file
+		console.log(this);
+	});
+
+	$('.icon-circle-check').click( function() {
+		// Save Changes
+		console.log(this);
+	});
+
+	$('.icon-trash').click( function() {
+		// Revert Changes
+		console.log(this);
+	});
+
+}); // $(document).ready
+
+function load_file_tree() {
+$('#tree').fancytree({
 	  		
 			source: workspace_object,
 			// [{"title":"Project1","key":"1","folder":true,"children":[{"title":"main.scala","key":"2","contents":"this is the contents of the file","language":"scala"},{"title":"libscales.scala","key":"3","contents":"itscales!","language":"scala"}]},{"title":"Project2","key":"4","folder":true,"children":[{"title":"main.scala","key":"5","contents":"thisisthecontentsofthefile","language":"scala"},{"title":"libscales.scala","key":"6","contents":"itscales!","language":"scala"}]}],
@@ -248,18 +284,20 @@ $(document).ready(function() {
 			
 	  	extensions: ["themeroller"]
 	  });
-	  
- 	$('#current-file').css('right', $('#resizable').css('right'));
-	$('.icon-folder').click( function() {
-		workspace_object.push(new Project(prompt("Choose a name for this project:")));	
-	});
-}); // $(document).ready
+}
 
 function Project(projectName) {
 	this.title = projectName;
 	this.key = count_nodes() + 1;
 	this.folder = true;
-	this.children = [];
+	this.children = [
+		{
+			"title": "main.scala",
+			"key": count_nodes() + 1,
+			"language": "scala",
+			"content": ""
+		}
+	];
 }
 
 function count_nodes() {
@@ -279,4 +317,8 @@ function render() {
 	var ctx = c.getContext("2d");
 	ctx.fillStyle = "#FF0000";
 	ctx.fillRect(0,0,50,50);
+}
+
+function init_workspace() {
+	lstor.setItem("scales_workspace","[{\"title\":\"Hello World\",\"key\":\"1\",\"folder\":true,\"children\":[{\"title\":\"main.scala\",\"key\":\"2\",\"contents\":\"this is the contents of the file\",\"language\":\"scala\"},{\"title\":\"libscales.scala\",\"key\":\"3\",\"contents\":\"itscales!\",\"language\":\"scala\"}]},{\"title\":\"Goodbye Cruel World\",\"key\":\"4\",\"folder\":true,\"children\":[{\"title\":\"main.scala\",\"key\":\"5\",\"contents\":\"thisisthecontentsofthefile\",\"language\":\"scala\"},{\"title\":\"libscales.scala\",\"key\":\"6\",\"contents\":\"itscales!\",\"language\":\"scala\"}]}]");
 }
