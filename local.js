@@ -15,7 +15,9 @@ var workspace_object = JSON.parse(lstor.getItem("scales_workspace"));
 
 // jQuery
 $(document).ready(function() {
-{	// Turn the left editor div (#editor) into an Ace editor:
+	
+
+	// Turn the left editor div (#editor) into an Ace editor:
 	  editor = ace.edit('editor');
 	  editor.setTheme('ace/theme/monokai');
 	  editor.getSession().setMode('ace/mode/scala');
@@ -26,7 +28,7 @@ $(document).ready(function() {
 	    valstr.concat(" \n");
 	  }
 	  editor.setValue(valstr);
-}
+
 	
 	// Set the canvas' html attributes 'width' and 'height' to be the same as 
 	// its parent container's css attributes for 'width' and 'height'.
@@ -138,34 +140,7 @@ $(document).ready(function() {
  	/*Toolbar events * * * * * * * * * * * * * * * * * * * * 
  	 *                                                     *
  	 * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-	$('.icon-folder').click( function() {
-		var project_name =  prompt ("Choose a name for this project:")
-		workspace_object.push(new Project(project_name) );	
-		tree.reload();
-		workspace_object[workspace_object.length-1].children.push({
-			"title": "main.scala",
-			"key": tree.count() + 1,
-			"language": "scala",
-			"content": ""
-		});
-		tree.reload();
-	});
-
-	$('.icon-file').click( function() {
-		// New file
-		console.log(this);
-	});
-
-	$('.icon-circle-check').click( function() {
-		// Save Changes
-		console.log(this);
-	});
-
-	$('.icon-trash').click( function() {
-		// Revert Changes
-		console.log(this);
-	});
+ 	init_toolbar();
 
 }); // $(document).ready
 
@@ -185,6 +160,43 @@ function load_file_tree() {
 	  });
 	tree  = $("#tree").fancytree("getTree");
 }
+
+function init_toolbar() {
+	
+	// New Project button
+	$('.icon-folder').click( function() {
+		var project_name =  prompt ("Choose a name for this project:")
+		workspace_object.push(new Project(project_name) );	
+		tree.reload();
+		workspace_object[workspace_object.length-1].children.push({
+			"title": "main.scala",
+			"key": tree.count() + 1,
+			"language": "scala",
+			"content": ""
+		});
+		tree.reload();
+	});
+
+	// New File button
+	$('.icon-file').click( function() {
+		// New file
+		console.log(this);
+	});
+
+	// Save Changes button
+	$('.icon-circle-check').click( function() {
+		// Save Changes
+		console.log(this);
+	});
+
+	// Revert Changes button
+	$('.icon-trash').click( function() {
+		// Revert Changes
+		console.log(this);
+	});
+}
+
+
 
 // Project constructor:
 function Project(projectName) {
