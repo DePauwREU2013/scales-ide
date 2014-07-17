@@ -35,59 +35,7 @@ $(document).ready(function() {
 	$('canvas').attr('width', $('#autodiv').css('width'));
 	$('canvas').attr('height', $('#autodiv').css('height'));
 	render();
-	
-  	function readFile(e) {
-	
-	// If the browser can handle the FileReader API:
-	    if (window.File && window.FileReader) {
-	
-	// The first in the list of opened files is f
-	      var f = e.target.files[0];
-	
-	// If f actually points to a file...
-	      if (f) {
-	
-	// ...then this is its name:
-	        fname = f.name; //Global
-	
-	// the FileReader will read the contents.
-	        var r = new FileReader();
-	
-	// When the file is finished loading:
-	        r.onload = function(e) {
-	          var contents = e.target.result;
-	          $('#file-list').append('<li id="' + fname + '" class="draggable">' + fname + '</li>');
-	          global_gist_data = JSON.parse('{\
-	"meta": "",\
-	"data": {\
-	    "description":"",\
-	    "files": {}\
-	}\
-	}');
-	
-	global_gist_data.data.files[fname] = {"content": contents};
-	          $('.draggable').draggable( {
-	            helper: 'clone',
-	            zIndex: 100,
-	            revert: "invalid",
-	            start: function() {
-	              active_file = $(this).html();
-	            }
-	          });
-	        }
-	
-	// r is reading the file, f, as text, to be
-	// captured in the triggered event, through the
-	// r.onload anonymous function
-	        r.readAsText(f);
-	      }
-	
-	    } else {
-	      console.log("api's not available.");
-	    }
-	
-	  }
-	
+
 	// document.getElementById('openLocalFile').addEventListener('change', readFile, false);
 	
 { 	// jQuery UI (resizable, droppable, etc.)
