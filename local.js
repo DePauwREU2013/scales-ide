@@ -97,7 +97,16 @@ function init_toolbar() {
 
 	// Save Changes button
 	$('.icon-circle-check').click( function() {
-		// Save Changes
+		
+		// Make sure they're sure:
+		if (confirm("Save all changes to the Local Storage?")) {
+			lstor.setItem("scales_workspace", 
+				JSON.stringify(workspace_object));
+			console.log(lstor.getItem("scales_workspace"));
+		} else {
+			console.log("Not saved.");
+		}
+
 		console.log(this);
 	});
 
