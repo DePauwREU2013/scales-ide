@@ -1,14 +1,17 @@
+// Globals
+
 var active_file;
-var file_tracker = {
-    inleft: "",
-    inright: ""
-};
 var debugData;
+
+// Local Storage
 var lstor = window.localStorage;
+
 if (!lstor.getItem("scales_workspace")) {
 	init_workspace();
 }
+
 var workspace_object = JSON.parse(lstor.getItem("scales_workspace"));
+
 // jQuery
 $(document).ready(function() {
 {	// Turn the left editor div (#editor) into an Ace editor:
