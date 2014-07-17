@@ -25,13 +25,7 @@ $(document).ready(function() {
 	init_parser();
 
    	load_file_tree();
-	  
- 	$('#current-file').css('right', $('#resizable').css('right'));
 
-
- 	/*Toolbar events * * * * * * * * * * * * * * * * * * * * 
- 	 *                                                     *
- 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * */
  	init_toolbar();
 
 }); // $(document).ready
