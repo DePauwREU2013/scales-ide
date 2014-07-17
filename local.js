@@ -28,51 +28,13 @@ $(document).ready(function() {
 	  editor.setValue(valstr);
 }
 	
-{// Set the canvas' html attributes 'width' and 'height' to be the same as 
+	// Set the canvas' html attributes 'width' and 'height' to be the same as 
 	// its parent container's css attributes for 'width' and 'height'.
 	//
 	// Changing the canvas' css attributes directly seems to stretch the image.
 	$('canvas').attr('width', $('#autodiv').css('width'));
 	$('canvas').attr('height', $('#autodiv').css('height'));
 	render();
-}
-	// Create new file
-	  $('#create').click( function() {
-	    var filename = prompt("Please enter the name of your project:");
-	
-	    while (projectArray().indexOf(filename) >= 0) {
-	      filename = prompt("Project name already in use, please try another name:");
-	    }
-	
-	    if (!editor.getValue()) {
-	      alert("Cannot create project with empty file.");
-	      return;
-	    }
-	
-	// If they didn't hit cancel:
-	    if (filename) {
-	      var projectList;
-	
-	// If this is not the user's first project:
-	      if (lstor.scales_projects) {
-	
-	// Append this project name to their list of projects
-	        projectList = lstor.getItem('scales_projects');
-	        projectList += ("," + filename);
-	      } else {
-	
-	// Otherwise, this project comprises their entire list.
-	        projectList = filename;
-	      }
-	
-	// Save their project list in localStorage
-	      lstor.setItem("scales_projects", projectList);
-	
-	// Create a gist with the new project name.
-	      create_gist(filename);
-	      
-	    }
-	  });
 	
 	  $('#open-gist').click( function() {
 	    var projectName;
