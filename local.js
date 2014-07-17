@@ -134,7 +134,7 @@ function init_ace() {
 function init_canvas() {
 	$('canvas').attr('width', $('#autodiv').css('width'));
 	$('canvas').attr('height', $('#autodiv').css('height'));
-	render();
+	render(); //Redraw canvas
 }
 
 /** init_jquery_ui
@@ -148,6 +148,7 @@ function init_jquery_ui() {
 	});
 
 	// Triggered on header resize: resize other elements to fit:
+	// (Magic numbers used to ensure accomodation for resize handles.)
 	$('#header').resize( function() {
 		$('#panels').css('top', parseInt($(this).css('height')) + 9 + "px");
 		$('#autodiv').css("left", $("#resizable").css("width"));
@@ -156,44 +157,45 @@ function init_jquery_ui() {
 			parseInt($(this).css('height')) + 9 + "px");
 		$('canvas').attr('width', $('#autodiv').css('width'));
 		$('canvas').attr('height', $('#autodiv').css('height'));
-		render();
+		render(); // Redraw canvas
 	});
 	
-	// Make context-list resizable:
-	  $('#context-list').resizable( {
-	    handles: "e"
-	  });
-	
+
+	// Make context-list resizable with a handle on the right:
+	$('#context-list').resizable( {
+    	handles: "e"
+  	});
+
+	// Triggered on context-list (project explorer) resize...
 	// Automatically resize the panels to the right:
-	  $('#context-list').on("resize", function() {
-	    $('#panels').css('left', 
-	    	parseInt($('#context-list').css('width'))-10 + 'px');
-	    $('canvas').attr('width', $('#autodiv').css('width'));
+	// (Magic numbers used to ensure accomodation for resize handles.)
+	$('#context-list').on("resize", function() {
+		$('#panels').css('left', 
+			parseInt($('#context-list').css('width'))-10 + 'px');
+		$('canvas').attr('width', $('#autodiv').css('width'));
 		$('canvas').attr('height', $('#autodiv').css('height'));
-	  	render();
-	  });
+		render(); // Redraw canvas
+  	});
+
+	// Set resizable container for Ace editor with handle to right:
+	$( "#resizable" ).resizable( {
+    	handles: "e"
+  	});
 	
-	// Set resizable container for left Ace editor:
-	  $( "#resizable" ).resizable( {
-	    // Handle can be selected as $('.ui-resizable-e').
-	    handles: "e"
-	  });
+	// Triggered when Ace editor panel is resized:
+  	$("#resizable").resize( function() {
 	
-	// Triggered when panel is resized:
-	  $("#resizable").resize( function() {
-	
-	// Notify Ace to update its size:
+		// Notify Ace to update its size:
 	    editor.resize();
 	
-	// Automatically resize right panel to fill the
-	// remainder of div#panels:
+		// Automatically resize right panel to fill the
+		// remainder of div#panels:
 	    $('#autodiv').css("left", $("#resizable").css("width"));
 	    $('#autodiv').css("right", "0");
 		$('#current-file').css('right',$('#resizable').css('right'));
 		$('canvas').attr('width', $('#autodiv').css('width'));
 		$('canvas').attr('height', $('#autodiv').css('height'));
-		render();
-    	
+		render(); // Redraw canvas
 	  }); 
 }
 
