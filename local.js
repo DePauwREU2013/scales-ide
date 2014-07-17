@@ -24,14 +24,21 @@ $(document).ready(function() {
 
 });
 
+/** init_local_storage
+ * Sets up localStorage (lstor), creating default workspace if none
+ * already exists in lstor. Initilizes workspace buffer object from lstor.
+ */
 function init_local_storage() {
 
+	// abbreviation for window.localStorage
 	lstor = window.localStorage;
 
+	// If no workspace is represented in the lstor, create a default:
 	if (!lstor.getItem("scales_workspace")) {
 		lstor.setItem("scales_workspace","[{\"title\":\"Hello World\",\"key\":\"1\",\"folder\":true,\"children\":[{\"title\":\"main.scala\",\"key\":\"2\",\"contents\":\"this is the contents of the file\",\"language\":\"scala\"},{\"title\":\"libscales.scala\",\"key\":\"3\",\"contents\":\"itscales!\",\"language\":\"scala\"}]},{\"title\":\"Goodbye Cruel World\",\"key\":\"4\",\"folder\":true,\"children\":[{\"title\":\"main.scala\",\"key\":\"5\",\"contents\":\"thisisthecontentsofthefile\",\"language\":\"scala\"},{\"title\":\"libscales.scala\",\"key\":\"6\",\"contents\":\"itscales!\",\"language\":\"scala\"}]}]");
 	}
 
+	// Populate the workspace buffer from the lstor:
 	workspace_object = JSON.parse(lstor.getItem("scales_workspace"));
 }
 
@@ -53,10 +60,13 @@ function load_file_tree() {
 			if (!node.folder) {
 				editor.setValue(node.data.contents);
 			}
-
 		}, 
+		
+		// Apply jQueryUI theme:
 		extensions: ["themeroller"]
 	  });
+
+	// Initialize global variable tree to the fancyTree object:
 	tree  = $("#tree").fancytree("getTree");
 }
 
