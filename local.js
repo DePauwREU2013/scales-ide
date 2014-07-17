@@ -6,7 +6,7 @@ var file_tracker = {
 var debugData;
 var lstor = window.localStorage;
 var globalProjectList = JSON.parse(lstor.getItem("scales_projects"));
-var context_pinned = false;
+var workspace_object = JSON.parse(lstor.getItem("scales_workspace"));
 // jQuery
 $(document).ready(function() {
 {	// Turn the left editor div (#editor) into an Ace editor:
@@ -235,7 +235,7 @@ $(document).ready(function() {
 
 	  $('#tree').fancytree({
 	  		
-			source: JSON.parse(lstor.getItem("scales_workspace")),
+			source: workspace_object,
 			// [{"title":"Project1","key":"1","folder":true,"children":[{"title":"main.scala","key":"2","contents":"this is the contents of the file","language":"scala"},{"title":"libscales.scala","key":"3","contents":"itscales!","language":"scala"}]},{"title":"Project2","key":"4","folder":true,"children":[{"title":"main.scala","key":"5","contents":"thisisthecontentsofthefile","language":"scala"},{"title":"libscales.scala","key":"6","contents":"itscales!","language":"scala"}]}],
 			activate: function(event, data){
 				// A node was activated: display its title:
@@ -250,140 +250,28 @@ $(document).ready(function() {
 	  });
 	  
  	$('#current-file').css('right', $('#resizable').css('right'));
-	
+	$('.icon-folder').click( function() {
+		workspace_object.push(new Project(prompt("Choose a name for this project:")));	
+	});
 }); // $(document).ready
 
-// Build JSON for file tree:
-function build_tree_json() {
-		// Create the empty array:
-	var tree_object = [];
-	var nextNodeID = 1;
-	
-	// Populate it with nodes for each project:
-	for (var p in globalProjectList) {
-		var projectId = p;
-		var projectName = globalProjectList[p];
-		var fileList = JSON.parse(lstor[projectName]).files;
+function Project(projectName) {
+	this.title = projectName;
+	this.key = count_nodes() + 1;
+	this.folder = true;
+	this.children = [];
+}
 
-		// Populate the project nodes (folders):
-		tree_object.push({"title": projectName, "key": nextNodeID++, "folder": true});
-		tree_object[projectId].children = []
-		
-		// Populate the project nodes (folders) with file nodes:
-		for (var f in fileList) {
-			var childObject = [];
-			childObject.title = fileList[f];
-			childObject.key = nextNodeID++;
+function count_nodes() {
+	var nodeCount = 0;
+	for (var p in workspace_object) {
+		nodeCount++;
 
-			tree_object[projectId].children += childObject;
-					
-			console.log(fileList[f]);
+		for (var f in workspace_object[p].children) {
+			nodeCount++;
 		}
-
-		console.log(tree_object);
 	}
-	return tree_object;
-}
-
-// Load file content into editor
-function load_file(parent_id) {
-  if (parent_id == "resizable") {
-
-// Keep track of where the file is loaded
-    file_tracker.inleft = active_file;
-
-// Load content into editor
-    editor.setValue(global_gist_data.data.files[active_file].content);
-
-// Synchronize the global_gist_data object with the editor
-// content.
-    editor.on('change', function() {
-
-// Verify that a file is still being edited here
-      if (file_tracker.inleft) {
-        global_gist_data.data.files[file_tracker.inleft].content =
-          editor.getValue();
-      }
-    });
-  } else if (parent_id == "autodiv") {
-
-// If it's open in the other editor, close it there first:
-    if (file_tracker.inleft == active_file) {
-      file_tracker.inleft = null;
-      editor.setValue("");
-    }
-
-
-    file_tracker.inright = active_file;
-    }
-}
-
-
-// Create a new Gist with the supplied file name (using a POST
-// request--non-functional in jQuery):
-function create_gist(filename) {
-
-// Process server's response:
-  function reqListener () {
-    lstor.setItem(filename, JSON.parse(this.responseText).id);
-  }
-
-// Make POST request:
-  var oReq = new XMLHttpRequest();
-  oReq.onload = reqListener;
-
-
-  oReq.open("post", "https://api.github.com/gists", true);
-var sendJSON = {description: "a file"
-                , public:
-                true, files:
-  {
-fname:
-    {
-content:
-      editor.getValue()
-    }
-  }
-                 };
-  oReq.send(JSON.stringify(sendJSON));
-} // create_gist
-
-// Open a Gist with the provided Gist ID (using a GET request)
-function open_gist(gistid) {
-  console.log(gistid);
-  ace.edit("editor").setValue("");
-
-  $.ajax( {
-url: 'https://api.github.com/gists/' + gistid,
-type: 'GET',
-dataType: 'jsonp'
-  }).success( function(gistdata) {
-    $('#project-name').html(gistid.toString() + ":");
-    $('#file-list').html('');
-    for (file in gistdata.data.files) {
-      $('#file-list').append('<li id="' + file + '" class="draggable">' + file + '</li>');
-    }
-    global_gist_data = gistdata;
-    $('.draggable').draggable( {
-helper: 'clone',
-      zIndex: 100,
-revert: "invalid",
-start: function() {
-        active_file = $(this).html();
-      }
-    });
-  }); // $.ajax
-
-}
-
-// Lookup the gist ID for a project name, and pass it to open_gist(gistid):
-function open_project(projectName) {
-  if (projectArray().indexOf(projectName) >= 0 ) {
-    open_gist(lstor.getItem(projectName));
-  } else {
-    alert("Cannot find project named, " + projectName + ".");
-
-  }
+	return nodeCount;
 }
 
 function render() {
