@@ -1,17 +1,11 @@
 // Globals
+var active_file, 
+    debugData,
+	tree,
+	lstor,
+	workspace;
 
-var active_file;
-var debugData;
-var tree;
-
-// Local Storage
-var lstor = window.localStorage;
-
-if (!lstor.getItem("scales_workspace")) {
-	init_workspace();
-}
-
-var workspace_object = JSON.parse(lstor.getItem("scales_workspace"));
+init_local_storage();
 
 // jQuery
 $(document).ready(function() {
@@ -28,8 +22,18 @@ $(document).ready(function() {
 
  	init_toolbar();
 
-}); // $(document).ready
+});
 
+function init_local_storage() {
+
+	lstor = window.localStorage;
+
+	if (!lstor.getItem("scales_workspace")) {
+		lstor.setItem("scales_workspace","[{\"title\":\"Hello World\",\"key\":\"1\",\"folder\":true,\"children\":[{\"title\":\"main.scala\",\"key\":\"2\",\"contents\":\"this is the contents of the file\",\"language\":\"scala\"},{\"title\":\"libscales.scala\",\"key\":\"3\",\"contents\":\"itscales!\",\"language\":\"scala\"}]},{\"title\":\"Goodbye Cruel World\",\"key\":\"4\",\"folder\":true,\"children\":[{\"title\":\"main.scala\",\"key\":\"5\",\"contents\":\"thisisthecontentsofthefile\",\"language\":\"scala\"},{\"title\":\"libscales.scala\",\"key\":\"6\",\"contents\":\"itscales!\",\"language\":\"scala\"}]}]");
+	}
+
+	workspace_object = JSON.parse(lstor.getItem("scales_workspace"));
+}
 
 /** load_file_tree
  * Initializes fancy tree element using the urrent workspace object
@@ -94,9 +98,11 @@ function init_toolbar() {
 	});
 }
 
-
-
-// Project constructor:
+/** Project
+ * Constructor for Project objects.
+ * @param projectName string representing the title of the project.
+ * @return a newly constructed Project object.
+ */
 function Project(projectName) {
 	this.title = projectName;
 	this.key = tree.count() + 1;
@@ -104,10 +110,9 @@ function Project(projectName) {
 	this.children = [];
 }
 
-function init_workspace() {
-	lstor.setItem("scales_workspace","[{\"title\":\"Hello World\",\"key\":\"1\",\"folder\":true,\"children\":[{\"title\":\"main.scala\",\"key\":\"2\",\"contents\":\"this is the contents of the file\",\"language\":\"scala\"},{\"title\":\"libscales.scala\",\"key\":\"3\",\"contents\":\"itscales!\",\"language\":\"scala\"}]},{\"title\":\"Goodbye Cruel World\",\"key\":\"4\",\"folder\":true,\"children\":[{\"title\":\"main.scala\",\"key\":\"5\",\"contents\":\"thisisthecontentsofthefile\",\"language\":\"scala\"},{\"title\":\"libscales.scala\",\"key\":\"6\",\"contents\":\"itscales!\",\"language\":\"scala\"}]}]");
-}
-
+/** init_ace
+ * Initializes the ACE editor.
+ */
 function init_ace() {
 	// Turn the editor div (#editor) into an Ace editor:
 	editor = ace.edit('editor');
@@ -132,17 +137,23 @@ function init_canvas() {
 	render();
 }
 
+/** init_jquery_ui
+ * Initializes jQueryUI elements (resizable, draggable, etc.)
+ */
 function init_jquery_ui() {
-// jQuery UI (resizable, droppable, etc.)
+
+	// Make header resizable with a handle on the bottom.
 	$('#header').resizable({
 		handles: "s",
 	});
 
+	// Triggered on header resize: resize other elements to fit:
 	$('#header').resize( function() {
 		$('#panels').css('top', parseInt($(this).css('height')) + 9 + "px");
 		$('#autodiv').css("left", $("#resizable").css("width"));
 	    $('#autodiv').css("right", "0");
-		$('#context-list').css('top', parseInt($(this).css('height')) + 9 + "px");
+		$('#context-list').css('top', 
+			parseInt($(this).css('height')) + 9 + "px");
 		$('canvas').attr('width', $('#autodiv').css('width'));
 		$('canvas').attr('height', $('#autodiv').css('height'));
 		render();
@@ -155,7 +166,8 @@ function init_jquery_ui() {
 	
 	// Automatically resize the panels to the right:
 	  $('#context-list').on("resize", function() {
-	    $('#panels').css('left', parseInt($('#context-list').css('width'))-10 + 'px');
+	    $('#panels').css('left', 
+	    	parseInt($('#context-list').css('width'))-10 + 'px');
 	    $('canvas').attr('width', $('#autodiv').css('width'));
 		$('canvas').attr('height', $('#autodiv').css('height'));
 	  	render();
