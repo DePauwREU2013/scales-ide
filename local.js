@@ -18,17 +18,12 @@ $(document).ready(function() {
 	
 	init_ace();
 	
-	// Set the canvas' html attributes 'width' and 'height' to be the same as 
-	// its parent container's css attributes for 'width' and 'height'.
-	//
-	// Changing the canvas' css attributes directly seems to stretch the image.
-	$('canvas').attr('width', $('#autodiv').css('width'));
-	$('canvas').attr('height', $('#autodiv').css('height'));
-	render();
+	init_canvas();	
+	
 
 	// document.getElementById('openLocalFile').addEventListener('change', readFile, false);
 	
-{ 	// jQuery UI (resizable, droppable, etc.)
+	// jQuery UI (resizable, droppable, etc.)
 	$('#header').resizable({
 		handles: "s",
 	});
@@ -94,7 +89,7 @@ $(document).ready(function() {
 	      console.log(this);
 	    }
 	  })
-}	
+
 	  // Syntax checking/error reporting
 	  editor.on("change", function(e) {
 	    try {
@@ -194,13 +189,6 @@ function Project(projectName) {
 	this.children = [];
 }
 
-function render() {
-	var c = document.querySelector('canvas');
-	var ctx = c.getContext("2d");
-	ctx.fillStyle = "#FF0000";
-	ctx.fillRect(0,0,50,50);
-}
-
 function init_workspace() {
 	lstor.setItem("scales_workspace","[{\"title\":\"Hello World\",\"key\":\"1\",\"folder\":true,\"children\":[{\"title\":\"main.scala\",\"key\":\"2\",\"contents\":\"this is the contents of the file\",\"language\":\"scala\"},{\"title\":\"libscales.scala\",\"key\":\"3\",\"contents\":\"itscales!\",\"language\":\"scala\"}]},{\"title\":\"Goodbye Cruel World\",\"key\":\"4\",\"folder\":true,\"children\":[{\"title\":\"main.scala\",\"key\":\"5\",\"contents\":\"thisisthecontentsofthefile\",\"language\":\"scala\"},{\"title\":\"libscales.scala\",\"key\":\"6\",\"contents\":\"itscales!\",\"language\":\"scala\"}]}]");
 }
@@ -215,4 +203,26 @@ function init_ace() {
 	var valstr = "// Welcome to the Scales IDE.";
 	editor.setValue(valstr);
 	editor.setOption("wrap", "free");
+}
+
+/** init_canvas
+ * Sets the canvas' html attributes 'width' and 'height' to be the same as 
+ * its parent container's css attributes for 'width' and 'height'.
+ *
+ * Changing the canvas' css attributes directly seems to stretch the image.
+ */
+function init_canvas() {
+	$('canvas').attr('width', $('#autodiv').css('width'));
+	$('canvas').attr('height', $('#autodiv').css('height'));
+	render();
+}
+
+/** render()
+ * renders the red square on the canvas.
+ */
+function render() {
+	var c = document.querySelector('canvas');
+	var ctx = c.getContext("2d");
+	ctx.fillStyle = "#FF0000";
+	ctx.fillRect(0,0,50,50);
 }
