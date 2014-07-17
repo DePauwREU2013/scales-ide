@@ -27,15 +27,54 @@
 			#context-list {
 				font-size: smaller;
 			}
+
 		</style>
     </head>
     <body>
         <!-- File management buttons -->
 		<div id="header">
-		
+		   <div class="toolbar">
+            
+                <!-- New Project -->
+                <svg class="icon">
+                    <title>New Project</title>
+                    <desc>Add a new project to your workspace.</desc>
+                    <use xlink:href="http://localhost/ide/open-iconic/sprite/sprite.svg#folder" class="icon-folder"></use>
+                </svg>
+
+                <!-- New file -->
+                <svg class="icon">
+                    <title>New File</title>
+                    <desc>Add a new file to the current project.</desc>
+                    <use xlink:href="http://localhost/ide/open-iconic/sprite/sprite.svg#file" class="icon-file"></use>
+                </svg>
+                
+                <!-- Save Changes -->
+                <svg class="icon">
+                    <title>Save Changes</title>
+                    <desc>Saves changes to currently opened file.</desc>
+                    <use xlink:href="http://localhost/ide/open-iconic/sprite/sprite.svg#circle-check" class="icon-file"></use>
+                </svg>                
+                </div><div class="toolbar">
+                <!-- Run -->
+                <svg class="icon">
+                    <title>Compile/Run</title>
+                    <desc>Compiles and runs current project.</desc>
+                    <use xlink:href="http://localhost/ide/open-iconic/sprite/sprite.svg#media-play" class="icon-file"></use>
+                </svg>    
+                <!-- Stop -->
+                <svg class="icon">
+                    <title>Stop</title>
+                    <desc>Stops current execution.</desc>
+                    <use xlink:href="http://localhost/ide/open-iconic/sprite/sprite.svg#media-stop" class="icon-file"></use>
+                </svg>    
+            </div>
 		</div>
         <div id="context-list">
         	<div id="context-heading" class="fancytree-active ui-widget ui-widget-content">Project Explorer:</div>
+            
+            <!-- Toolbar: new-project, new-file, save-changes, import-file -->
+           
             <div id="tree" style="border:none;">
                
             </div>
