@@ -36,28 +36,7 @@ $(document).ready(function() {
 	$('canvas').attr('height', $('#autodiv').css('height'));
 	render();
 	
-	  $('#open-gist').click( function() {
-	    var projectName;
-	    projectName = prompt("Please enter the project name or Gist ID:");
-	
-	// If they didn't hit cancel:
-	    if (projectName) {
-	
-	// Try to evaluate the entry as a Gist ID:
-	      try {
-	// eval(projectName);
-	        eval(projectName);
-	        open_gist(projectName);
-	
-	// If the input isn't decimal or hexidecimal, it's a project name:
-	      } catch(e) {
-	        open_project(projectName);
-	      };
-	    }
-	  });
-	
-	
-	  function readFile(e) {
+  	function readFile(e) {
 	
 	// If the browser can handle the FileReader API:
 	    if (window.File && window.FileReader) {
