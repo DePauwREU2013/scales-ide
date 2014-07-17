@@ -195,22 +195,6 @@ function init_jquery_ui() {
 		render();
     	
 	  }); 
-	
-	
-	// Make the panels received drag & dropped items:
-	  $('.droppable').droppable( {
-	    accept: '.draggable',
-	    over: function() {
-	      $('.editor').addClass('highlight');
-	    },
-	    out: function() {
-	      $('.editor').removeClass('highlight');
-	    },
-	    drop: function() {
-	      load_file($(this).attr('id'));
-	      console.log(this);
-	    }
-	  })	
 }
 
 /** init_parser
