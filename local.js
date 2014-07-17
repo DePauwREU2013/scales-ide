@@ -22,36 +22,9 @@ $(document).ready(function() {
 	
 	init_jquery_ui();
 
-	// document.getElementById('openLocalFile').addEventListener('change', readFile, false);
-	
-	
+	init_parser();
 
-	  // Syntax checking/error reporting
-	  editor.on("change", function(e) {
-	    try {
-	      editor.getSession().clearAnnotations();
-	      parser.parse(editor.getValue());
-	    } catch(exn) {
-	      if (!editor.getSession().$annotations) {
-	        editor.getSession().$annotations = new Array();
-	      }
-	
-	      var myAnno = {
-	        "column": exn['column'],
-	        "row": exn['line'] - 1,
-	        "type": "error",
-	        "raw": exn['message'],
-	        "text": exn['message']
-	      };
-	      
-	      editor.getSession().$annotations.push(myAnno);
-	      editor.getSession().setAnnotations(editor.getSession().$annotations);
-	    }
-	  });
-
-	  load_file_tree();
-
-	  
+   	load_file_tree();
 	  
  	$('#current-file').css('right', $('#resizable').css('right'));
 
@@ -62,6 +35,7 @@ $(document).ready(function() {
  	init_toolbar();
 
 }); // $(document).ready
+
 
 /** load_file_tree
  * Initializes fancy tree element using the urrent workspace object
@@ -88,6 +62,9 @@ function load_file_tree() {
 	tree  = $("#tree").fancytree("getTree");
 }
 
+/** init_toolbar
+ * Creates event listeners for the icons in the toolbar
+ */
 function init_toolbar() {
 	
 	// New Project button
@@ -228,6 +205,36 @@ function init_jquery_ui() {
 	      console.log(this);
 	    }
 	  })	
+}
+
+/** init_parser
+ * Initializes parser module. Parses code on change, either passing or
+ * encountering an exception. If an exception is thrown, it is caught in
+ * this function and its details are applied to the editor as annotations.
+ */
+function init_parser() {
+  // Syntax checking/error reporting
+  editor.on("change", function(e) {
+    try {
+      editor.getSession().clearAnnotations();
+      parser.parse(editor.getValue());
+    } catch(exn) {
+      if (!editor.getSession().$annotations) {
+        editor.getSession().$annotations = new Array();
+      }
+
+      var myAnno = {
+        "column": exn['column'],
+        "row": exn['line'] - 1,
+        "type": "error",
+        "raw": exn['message'],
+        "text": exn['message']
+      };
+      
+      editor.getSession().$annotations.push(myAnno);
+      editor.getSession().setAnnotations(editor.getSession().$annotations);
+    }
+  });
 }
 
 /** render()
