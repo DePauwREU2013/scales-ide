@@ -1,5 +1,6 @@
 // Globals
-var active_file, 
+var active_file,
+	current_buffer, 
     debugData,
 	tree,
 	lstor,
@@ -7,7 +8,9 @@ var active_file,
 
 init_local_storage();
 
-// jQuery
+/** document.ready
+ *
+ */
 $(document).ready(function() {
 	
 	init_ace();
@@ -16,7 +19,7 @@ $(document).ready(function() {
 	
 	init_jquery_ui();
 
-	init_parser();
+	init_editor_events();
 
    	load_file_tree();
 
@@ -51,16 +54,19 @@ function load_file_tree() {
 	// Create the fancytree object.
 	$('#tree').fancytree({  		
 		source: workspace_object,
-
+		debugLevel: 0,
 		// When a node is activated (clicked/keyboard):
 		activate: function(event, data){
 			var node = data.node;		
 
 			// If the node is a file, load its contents to editor:
 			if (!node.folder) {
-				editor.setValue(node.data.contents);
+				active_file = node;
+				
+				editor.setValue(active_file.data.contents);
 			}
 		}, 
+		// beforeActivate: function(event, data){},
 		
 		// Apply jQueryUI theme:
 		extensions: ["themeroller"]
@@ -218,14 +224,12 @@ function init_jquery_ui() {
 	  }); 
 }
 
-/** init_parser
- * Initializes parser module. Parses code on change, either passing or
- * encountering an exception. If an exception is thrown, it is caught in
- * this function and its details are applied to the editor as annotations.
+
+/** exec_parser
+ *
  */
-function init_parser() {
-  // Syntax checking/error reporting
-  editor.on("change", function(e) {
+function exec_parser() {
+
     try {
       editor.getSession().clearAnnotations();
       parser.parse(editor.getValue());
@@ -244,8 +248,41 @@ function init_parser() {
       
       editor.getSession().$annotations.push(myAnno);
       editor.getSession().setAnnotations(editor.getSession().$annotations);
-    }
+    } // catch(exn)
+}
+
+/** update_buffer
+ *
+ */
+function update_buffer() {
+	
+	// Find the approprate file in the workspace_object
+
+	// Check each project:
+	for (var p in workspace_object) {
+	    // If its key equals the key of the active file's parent project, then:
+	    if (workspace_object[p].key === active_file.parent.key) {
+	    	for (var f in workspace_object[p].children) {
+	        	if (workspace_object[p].children[f].key === active_file.key) {
+	            	workspace_object[p].children[f].contents = editor.getValue();
+	            }
+	        }
+	    }
+	}	
+}
+
+/** init_parser
+ * Initializes parser module. Parses code on change, either passing or
+ * encountering an exception. If an exception is thrown, it is caught in
+ * this function and its details are applied to the editor as annotations.
+ */
+function init_editor_events() {
+  // Syntax checking/error reporting
+  editor.on("change", function(e) {
+  	exec_parser();
+  	update_buffer();
   });
+
 }
 
 /** render()
@@ -256,5 +293,14 @@ function render() {
 	var ctx = c.getContext("2d");
 	ctx.fillStyle = "#FF0000";
 	ctx.fillRect(0,0,50,50);
+}
+
+window.onbeforeunload = function() {
+	// If workspace_object and lstor["scales_workspace"] have diffrent values
+	if (lstor.getItem("scales_workspace") !== JSON.stringify(workspace_object)) {
+		return "This page is asking you to confirm that you want to leave - data you have entered may not be saved.";
+	} else {
+		return;
+	}
 }
 
