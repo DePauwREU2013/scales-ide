@@ -1,3 +1,12 @@
+a {
+	text-decoration: none;
+	color: #66d9ef;
+}
+
+a:hover {
+	color: #ae81ff;
+}
+
 #new-dialog {
     display: none;    
 }
@@ -9,6 +18,10 @@
 	right: 0;
 	height: 30px;
 	background-color: #272822;
+	color: white;
+	padding: 8px 8px 0 0;
+	font-size: .9em;
+	font-family: 'Monaco', 'Menlo', 'Ubuntu Mono','Consolas','source-code-pro',monospace;
 }
 #context-list {
     position: absolute;
@@ -30,7 +43,7 @@
 .toolbar {
 	position: relative;
 	margin: 0;
-	padding: 5px 5px 5px 5px; 
+	padding: px 5px 5px 5px; 
 	height: 50px;
 	float: left;
 	border: 1px solid gray;
@@ -147,4 +160,7 @@ ul.project-tree {
 #tree {
 	clear: left;
 	margin-bottom: 1em;
+}
+#github-link {
+	float: right;
 }
