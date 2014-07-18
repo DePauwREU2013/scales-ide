@@ -18,7 +18,7 @@
     width: 200px; 
     background-color: #272822;
     color: #f8f8f2;
-    padding: .2em;
+    padding: 0 .2em 0 .2em;
     font-family: 'Monaco','Menlo','Ubuntu Mono','Consolas','source-code-pro',monospace;
 }
 
@@ -59,7 +59,6 @@
 .icon:active {fill: #ae81ff;}
 
 #context-heading {
-	border-top: none;
 	margin-left: -4px;
 	padding: 5px;
 }
@@ -147,4 +146,5 @@ ul.project-tree {
 
 #tree {
 	clear: left;
+	margin-bottom: 1em;
 }
