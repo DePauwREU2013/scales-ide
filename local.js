@@ -102,18 +102,9 @@ function init_toolbar() {
 	});
 
 	// Save Changes button
-	$('.icon-circle-check').click( function() {
-		
-		// Make sure they're sure:
-		if (confirm("Save all changes to the Local Storage?")) {
-			lstor.setItem("scales_workspace", 
-				JSON.stringify(workspace_object));
-			console.log(lstor.getItem("scales_workspace"));
-		} else {
-			console.log("Not saved.");
-		}
-
-		console.log(this);
+	$('.icon-circle-check').click( function() {		
+		lstor.setItem("scales_workspace", JSON.stringify(workspace_object));
+		tree.reload();
 	});
 
 	// Revert Changes button
