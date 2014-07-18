@@ -295,6 +295,11 @@ function render() {
 	ctx.fillRect(0,0,50,50);
 }
 
+/** window.onbeforeunload
+ * If the user has made changes to the buffered workspace, but not saved them
+ * to local storage, they will be bugged by a confirm pop-up if they try to 
+ * navigate away from (or reload) the IDE.
+ */
 window.onbeforeunload = function() {
 	// If workspace_object and lstor["scales_workspace"] have diffrent values
 	if (lstor.getItem("scales_workspace") !== JSON.stringify(workspace_object)) {
@@ -302,5 +307,5 @@ window.onbeforeunload = function() {
 	} else {
 		return;
 	}
-}
+};
 
