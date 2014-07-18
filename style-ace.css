@@ -19,8 +19,6 @@ a:hover {
 	height: 30px;
 	background-color: #272822;
 	color: white;
-	padding: 8px 8px 0 0;
-	font-size: .9em;
 	font-family: 'Monaco', 'Menlo', 'Ubuntu Mono','Consolas','source-code-pro',monospace;
 }
 #context-list {
@@ -31,7 +29,7 @@ a:hover {
     width: 200px; 
     background-color: #272822;
     color: #f8f8f2;
-    padding: 0 .2em 0 .2em;
+    
     font-family: 'Monaco','Menlo','Ubuntu Mono','Consolas','source-code-pro',monospace;
 }
 
@@ -43,8 +41,8 @@ a:hover {
 .toolbar {
 	position: relative;
 	margin: 0;
-	padding: px 5px 5px 5px; 
-	height: 50px;
+	padding: 2px 10px 5px 10px; 
+	
 	float: left;
 	border: 1px solid gray;
 	border-left: none;
@@ -98,6 +96,7 @@ a:hover {
     background-color: white;
 }
 #resizable { 
+
     width: 50%;
 }
 
@@ -162,5 +161,8 @@ ul.project-tree {
 	margin-bottom: 1em;
 }
 #github-link {
+	font-size: .8em;
+	margin: .5em 1em 0 0;
 	float: right;
+
 }
