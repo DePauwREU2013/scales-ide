@@ -100,8 +100,21 @@ function init_toolbar() {
 
 	// New File button
 	$('.icon-file').click( function() {
-		// New file
-		console.log(this);
+        if (!active_project) {
+            alert("Select a project first.");
+        } else {
+            var file_name = prompt("Choose a name for the file.");
+            active_project_in_workspace = 
+                get_object_from_key(active_project.key);
+            active_project_in_workspace.children.push({
+                "title": file_name,
+                "key": tree.count() + 1,
+                "language": "scala",
+                "content": ""
+            });
+            tree.reload();
+            console.log(this);
+        }
 	});
 
 	// Save Changes button
@@ -263,18 +276,8 @@ function get_object_from_key(key) {
 function update_buffer() {
 	
 	// Find the approprate file in the workspace_object
+	get_object_from_key(active_file.key).contents = editor.getValue();
 
-	// Check each project:
-	for (var p in workspace_object) {
-	    // If its key equals the key of the active file's parent project, then:
-	    if (workspace_object[p].key === active_file.parent.key) {
-	    	for (var f in workspace_object[p].children) {
-	        	if (workspace_object[p].children[f].key === active_file.key) {
-	            	workspace_object[p].children[f].contents = editor.getValue();
-	            }
-	        }
-	    }
-	}	
 }
 
 /** init_parser
