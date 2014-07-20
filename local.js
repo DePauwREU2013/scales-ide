@@ -1,6 +1,6 @@
 // Globals
 var active_file,
-	current_buffer, 
+	current_buffer,
     debugData,
 	tree,
 	lstor,
@@ -11,17 +11,17 @@ init_local_storage();
 /** document.ready
  *
  */
-$(document).ready(function() {
+$(document).ready(function () {
 	
 	init_ace();
 	
-	init_canvas();	
+	init_canvas();
 	
 	init_jquery_ui();
 
 	init_editor_events();
-
-   	load_file_tree();
+    
+    load_file_tree();
 
  	init_toolbar();
 
@@ -38,7 +38,7 @@ function init_local_storage() {
 
 	// If no workspace is represented in the lstor, create a default:
 	if (!lstor.getItem("scales_workspace")) {
-		lstor.setItem("scales_workspace","[{\"title\":\"Hello World\",\"key\":\"1\",\"folder\":true,\"children\":[{\"title\":\"main.scala\",\"key\":\"2\",\"contents\":\"this is the contents of the file\",\"language\":\"scala\"},{\"title\":\"libscales.scala\",\"key\":\"3\",\"contents\":\"itscales!\",\"language\":\"scala\"}]},{\"title\":\"Goodbye Cruel World\",\"key\":\"4\",\"folder\":true,\"children\":[{\"title\":\"main.scala\",\"key\":\"5\",\"contents\":\"thisisthecontentsofthefile\",\"language\":\"scala\"},{\"title\":\"libscales.scala\",\"key\":\"6\",\"contents\":\"itscales!\",\"language\":\"scala\"}]}]");
+		lstor.setItem("scales_workspace","[{\"title\":\"Hello World\",\"expanded\":true,\"key\":\"1\",\"folder\":true,\"children\":[{\"title\":\"main.scala\",\"key\":\"2\",\"contents\":\"this is the contents of the file\",\"language\":\"scala\"},{\"title\":\"libscales.scala\",\"key\":\"3\",\"contents\":\"itscales!\",\"language\":\"scala\"}]},{\"title\":\"Goodbye Cruel World\",\"expanded\":true,\"key\":\"4\",\"folder\":true,\"children\":[{\"title\":\"main.scala\",\"key\":\"5\",\"contents\":\"thisisthecontentsofthefile\",\"language\":\"scala\"},{\"title\":\"libscales.scala\",\"key\":\"6\",\"contents\":\"itscales!\",\"language\":\"scala\"}]}]");
 	}
 
 	// Populate the workspace buffer from the lstor:
@@ -55,6 +55,8 @@ function load_file_tree() {
 	$('#tree').fancytree({  		
 		source: workspace_object,
 		debugLevel: 0,
+        minExpandLevel: 1,
+        clickFolderMode: 2,
 		// When a node is activated (clicked/keyboard):
 		activate: function(event, data){
 			var node = data.node;		
@@ -102,8 +104,16 @@ function init_toolbar() {
 	});
 
 	// Save Changes button
-	$('.icon-circle-check').click( function() {		
+	$('.icon-circle-check').click( function() {
+        for (var p in workspace_object) {
+            for (var f in workspace_object[p].children) {
+                workspace_object[p].children[f].title = 
+                    workspace_object[p].children[f].title.replace(/\*/, "");
+            }
+        }
+        
 		lstor.setItem("scales_workspace", JSON.stringify(workspace_object));
+        note_unsaved_files();
 		tree.reload();
 	});
 
@@ -242,24 +252,45 @@ function exec_parser() {
     } // catch(exn)
 }
 
-/** update_buffer
- *
- */
-function update_buffer() {
-	
-	// Find the approprate file in the workspace_object
+function note_unsaved_files() {
+    stored = get_related(JSON.parse(lstor["scales_workspace"]), active_file);
+    buffered = get_related(workspace_object, active_file);
+    
+    if (buffered.contents !== stored.contents) {
+        buffered.title = stored.title + "*";
+        tree.reload();
+        expand_tree();
+    } else {
+        buffered.title = stored.title;
+        tree.reload();
+        expand_tree();
+    }
+}
+    
 
-	// Check each project:
-	for (var p in workspace_object) {
-	    // If its key equals the key of the active file's parent project, then:
-	    if (workspace_object[p].key === active_file.parent.key) {
-	    	for (var f in workspace_object[p].children) {
-	        	if (workspace_object[p].children[f].key === active_file.key) {
-	            	workspace_object[p].children[f].contents = editor.getValue();
+function get_related(source, active) {
+    // Check each project:
+	for (var p in source) {
+	    
+        // If its key equals the key of the active file's parent project, then:
+	    if (source[p].key === active.parent.key) {
+	    	
+            // Check each file in the project:
+            for (var f in source[p].children) {
+	        	
+                // If its key matches the key of the active_file, return the member.
+                if (source[p].children[f].key === active.key) {
+	               return source[p].children[f];
 	            }
 	        }
 	    }
 	}	
+}
+/** update_buffer
+ *
+ */
+function update_buffer() {
+    get_related(workspace_object, active_file).contents = editor.getValue();	
 }
 
 /** init_parser
@@ -272,6 +303,7 @@ function init_editor_events() {
   editor.on("change", function(e) {
   	exec_parser();
   	update_buffer();
+    note_unsaved_files();
   });
 
 }
