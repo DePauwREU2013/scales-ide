@@ -1,5 +1,6 @@
 // Globals
 var active_file,
+	active_project,
 	current_buffer, 
     debugData,
 	tree,
@@ -62,8 +63,10 @@ function load_file_tree() {
 			// If the node is a file, load its contents to editor:
 			if (!node.folder) {
 				active_file = node;
-				
+				active_project = active_file.parent;
 				editor.setValue(active_file.data.contents);
+			} else {
+				active_project = node;
 			}
 		}, 
 		// beforeActivate: function(event, data){},
@@ -241,6 +244,17 @@ function exec_parser() {
       editor.getSession().$annotations.push(myAnno);
       editor.getSession().setAnnotations(editor.getSession().$annotations);
     } // catch(exn)
+}
+
+function get_object_from_key(key) {
+    for (var p in workspace_object) {
+        if (workspace_object[p].key == key)
+            return workspace_object[p];
+        for (var f in workspace_object[p].children) {
+            if (workspace_object[p].children[f].key == key)
+                return workspace_object[p].children[f];
+        }
+    }
 }
 
 /** update_buffer
