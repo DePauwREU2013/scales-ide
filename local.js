@@ -38,7 +38,7 @@ function init_local_storage() {
 
 	// If no workspace is represented in the lstor, create a default:
 	if (!lstor.getItem("scales_workspace")) {
-		lstor.setItem("scales_workspace","[{\"title\":\"Hello World\",\"key\":\"1\",\"folder\":true,\"children\":[{\"title\":\"main.scala\",\"key\":\"2\",\"contents\":\"this is the contents of the file\",\"language\":\"scala\"},{\"title\":\"libscales.scala\",\"key\":\"3\",\"contents\":\"itscales!\",\"language\":\"scala\"}]},{\"title\":\"Goodbye Cruel World\",\"key\":\"4\",\"folder\":true,\"children\":[{\"title\":\"main.scala\",\"key\":\"5\",\"contents\":\"thisisthecontentsofthefile\",\"language\":\"scala\"},{\"title\":\"libscales.scala\",\"key\":\"6\",\"contents\":\"itscales!\",\"language\":\"scala\"}]}]");
+		lstor.setItem("scales_workspace","[{\"title\":\"Hello World\",\"expanded\":true,\"key\":\"1\",\"folder\":true,\"children\":[{\"title\":\"main.scala\",\"key\":\"2\",\"contents\":\"this is the contents of the file\",\"language\":\"scala\"},{\"title\":\"libscales.scala\",\"key\":\"3\",\"contents\":\"itscales!\",\"language\":\"scala\"}]},{\"title\":\"Goodbye Cruel World\",\"expanded\":true,\"key\":\"4\",\"folder\":true,\"children\":[{\"title\":\"main.scala\",\"key\":\"5\",\"contents\":\"thisisthecontentsofthefile\",\"language\":\"scala\"},{\"title\":\"libscales.scala\",\"key\":\"6\",\"contents\":\"itscales!\",\"language\":\"scala\"}]}]");
 	}
 
 	// Populate the workspace buffer from the lstor:
@@ -121,6 +121,7 @@ function init_toolbar() {
  */
 function Project(projectName) {
 	this.title = projectName;
+    this.expanded = true;
 	this.key = tree.count() + 1;
 	this.folder = true;
 	this.children = [];
