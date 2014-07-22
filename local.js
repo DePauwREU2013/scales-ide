@@ -62,6 +62,7 @@ function load_file_tree() {
 			// If the node is a file, load its contents to editor:
 			if (!node.folder) {
 				active_file = node;
+				document.title = active_file.title;
 				
 				editor.setValue(active_file.data.contents);
 			}
