@@ -4,7 +4,9 @@ var active_file,
     debugData,
 	tree,
 	lstor,
-	workspace;
+	workspace,
+	HOST,
+	SOURCE;
 
 init_local_storage();
 
@@ -301,3 +303,26 @@ window.onbeforeunload = function() {
 	}
 };
 
+
+function post_str(str, server) {
+  $.ajax({
+    type: "POST",
+    url: server,
+    data: str,
+    success: function( data) {
+      cosole.log(data);
+    }
+  });
+}
+
+function build() {
+  post_str(SOURCE, HOST);
+}
+
+console.log('Type help for a list of commands.');
+
+help = "The following commands are available:\
+  post_str(<source>, <host>), wherein <source> is a stringified version of the JSON you want to send to the server and <host> is the server's URL.\
+  \
+  You can also set environment variables: SOURCE and HOST as follows:\
+  One you have set the env variables, you can simlpy call build(), and the contents of SOURCE will be sent to, HOST.";
