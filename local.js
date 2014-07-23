@@ -40,11 +40,11 @@ function init_local_storage() {
 
 	// If no workspace is represented in the lstor, create a default:
 	if (!lstor.getItem("scales_workspace")) {
-		lstor.setItem("scales_workspace","[{\"title\":\"Hello World\",\"key\":\"1\",\"folder\":true,\"children\":[{\"title\":\"main.scala\",\"key\":\"2\",\"contents\":\"this is the contents of the file\",\"language\":\"scala\"},{\"title\":\"libscales.scala\",\"key\":\"3\",\"contents\":\"itscales!\",\"language\":\"scala\"}]},{\"title\":\"Goodbye Cruel World\",\"key\":\"4\",\"folder\":true,\"children\":[{\"title\":\"main.scala\",\"key\":\"5\",\"contents\":\"thisisthecontentsofthefile\",\"language\":\"scala\"},{\"title\":\"libscales.scala\",\"key\":\"6\",\"contents\":\"itscales!\",\"language\":\"scala\"}]}]");
+		lstor.setItem("scales_workspace", "[{\"title\":\"default.scala\",\"key\":\"1\",\"contents\":\"this is the contents of the file\",\"language\":\"scala\",\"dirty\":false},{\"title\":\"resource.scala\",\"key\":\"2\",\"contents\":\"/*This is an example of a second file in your project.*/\",\"language\":\"scala\",\"dirty\":false}]");
 	}
 
 	// Populate the workspace buffer from the lstor:
-	workspace_object = JSON.parse(lstor.getItem("scales_workspace"));
+	workspace = JSON.parse(lstor.getItem("scales_workspace"));
 }
 
 /** load_file_tree
@@ -55,17 +55,16 @@ function load_file_tree() {
 
 	// Create the fancytree object.
 	$('#tree').fancytree({  		
-		source: workspace_object,
+		source: workspace,
 		debugLevel: 0,
 		// When a node is activated (clicked/keyboard):
 		activate: function(event, data){
 			var node = data.node;		
 
 			// If the node is a file, load its contents to editor:
-			if (!node.folder) {
+			if (node) {
 				active_file = node;
-				document.title = active_file.title;
-				
+				document.title = get_related(active_file).title
 				editor.setValue(active_file.data.contents);
 			}
 		}, 
@@ -84,20 +83,6 @@ function load_file_tree() {
  */
 function init_toolbar() {
 	
-	// New Project button
-	$('.icon-folder').click( function() {
-		var project_name =  prompt ("Choose a name for this project:")
-		workspace_object.push(new Project(project_name) );	
-		tree.reload();
-		workspace_object[workspace_object.length-1].children.push({
-			"title": "main.scala",
-			"key": tree.count() + 1,
-			"language": "scala",
-			"content": ""
-		});
-		tree.reload();
-	});
-
 	// New File button
 	$('#new-file-button').click( function() {
 		// New file
@@ -106,7 +91,11 @@ function init_toolbar() {
 
 	// Save Changes button
 	$('.icon-circle-check').click( function() {		
-		lstor.setItem("scales_workspace", JSON.stringify(workspace_object));
+		lstor.setItem("scales_workspace", JSON.stringify(workspace));
+		for (var f in workspace) {
+			workspace[f].dirty = false;
+		}
+		document.title = get_related[active_file].title;
 		tree.reload();
 	});
 
@@ -115,18 +104,6 @@ function init_toolbar() {
 		// Revert Changes
 		console.log(this);
 	});
-}
-
-/** Project
- * Constructor for Project objects.
- * @param projectName string representing the title of the project.
- * @return a newly constructed Project object.
- */
-function Project(projectName) {
-	this.title = projectName;
-	this.key = tree.count() + 1;
-	this.folder = true;
-	this.children = [];
 }
 
 /** init_ace
@@ -245,24 +222,24 @@ function exec_parser() {
     } // catch(exn)
 }
 
+function get_related(active) {
+	for (var f in workspace) {
+		if (workspace[f].key === active.key) {
+			return workspace[f];
+		}
+	}
+}
+
 /** update_buffer
  *
  */
 function update_buffer() {
+	var buffer_version = get_related(active_file);
 	
-	// Find the approprate file in the workspace_object
-
-	// Check each project:
-	for (var p in workspace_object) {
-	    // If its key equals the key of the active file's parent project, then:
-	    if (workspace_object[p].key === active_file.parent.key) {
-	    	for (var f in workspace_object[p].children) {
-	        	if (workspace_object[p].children[f].key === active_file.key) {
-	            	workspace_object[p].children[f].contents = editor.getValue();
-	            }
-	        }
-	    }
-	}	
+	buffer_version.dirty = (buffer_version.contents != editor.getValue());
+	document.title = buffer_version.dirty ? get_related[active_file].title + "*" : get_related[active_file].title;
+	console.log(buffer_version.dirty);
+	// Find the approprate file in the workspace
 }
 
 /** init_parser
@@ -295,8 +272,8 @@ function render() {
  * navigate away from (or reload) the IDE.
  */
 window.onbeforeunload = function() {
-	// If workspace_object and lstor["scales_workspace"] have diffrent values
-	if (lstor.getItem("scales_workspace") !== JSON.stringify(workspace_object)) {
+	// If workspace and lstor["scales_workspace"] have diffrent values
+	if (lstor.getItem("scales_workspace") !== JSON.stringify(workspace)) {
 		return "This page is asking you to confirm that you want to leave - data you have entered may not be saved.";
 	} else {
 		return;
