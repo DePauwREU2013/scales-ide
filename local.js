@@ -97,7 +97,7 @@ function init_toolbar() {
 	});
 
 	// New File button
-	$('.icon-file').click( function() {
+	$('#new-file-button').click( function() {
 		// New file
 		console.log(this);
 	});

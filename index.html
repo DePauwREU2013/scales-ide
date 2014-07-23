@@ -19,7 +19,11 @@
         <link rel="stylesheet" href="./jquery-ui-1.11.0.custom/jquery-ui.min.css" />
         <link rel="stylesheet" href="./fancytree/skin-themeroller/ui.fancytree.css" />
         <link rel="stylesheet" type="text/css" href="style-ace.css" />
-		
+		<!-- Latest compiled and minified JavaScript -->
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
         <!-- Hack to fix poor design decision in rolling a jQueryUI theme -->
         <style>
 			.ui-state-hover {border: 1px solid #272822 !important;
@@ -39,47 +43,35 @@
                 <!-- Toolbar: File Manipulation -->
 
                 <!-- New Project -->
-                <svg class="icon">
-                    <title>New Project</title>
-                    <desc>Add a new project to your workspace.</desc>
-                    <use xlink:href="./open-iconic/sprite/sprite.svg#folder" class="icon-folder"></use>
-                </svg>
-
-                <!-- New file -->
-                <svg class="icon">
-                    <title>New File</title>
-                    <desc>Add a new file to the current project.</desc>
-                    <use xlink:href="./open-iconic/sprite/sprite.svg#file" class="icon-file"></use>
-                </svg>
                 
+                <!-- New file -->
+                <button id="new-file-button" type="button" class="btn btn-default btn-xs">
+                    <span class="glyphicon glyphicon-file"></span> New File
+                </button>
+
                 <!-- Save Changes -->
-                <svg class="icon">
-                    <title>Save Changes</title>
-                    <desc>Saves changes to currently opened file.</desc>
-                    <use xlink:href="./open-iconic/sprite/sprite.svg#circle-check" class="icon-circle-check"></use>
-                </svg>
+                <button id="save-changes-button" type="button" class="btn btn-default btn-xs">
+                    <span class="glyphicon glyphicon-floppy-disk"></span> Save Changes
+                </button>
+
                 <!-- Revert Changes -->
-                <svg class="icon">
-                    <title>Revert Changes</title>
-                    <desc>Reverts changes to currently opened file back to previously saved state.</desc>
-                    <use xlink:href="./open-iconic/sprite/sprite.svg#trash" class="icon-trash"></use>
-                </svg>                  
-                </div><div class="toolbar">
+                <button id="revert-changes-button" type="button" class="btn btn-default btn-xs"> 
+                    <span class="glyphicon glyphicon-trash"></span> Discard Changes
+                </button>
+            </div>
+            <div class="toolbar">
 
                 <!-- Toolbar: Build Tools -->
         
                 <!-- Run -->
-                <svg class="icon">
-                    <title>Compile/Run</title>
-                    <desc>Compiles and runs current project.</desc>
-                    <use xlink:href="./open-iconic/sprite/sprite.svg#media-play" class="icon-media-play"></use>
-                </svg>    
+                <button id="build-run-button" type="button" class="btn btn-default btn-xs"> 
+                    <span class="glyphicon glyphicon-play"></span> Build & Run
+                </button>
+
                 <!-- Stop -->
-                <svg class="icon">
-                    <title>Stop</title>
-                    <desc>Stops current execution.</desc>
-                    <use xlink:href="./open-iconic/sprite/sprite.svg#media-stop" class="icon-media-stop"></use>
-                </svg>    
+                <button id="stop-button" type="button" class="btn btn-default btn-xs"> 
+                    <span class="glyphicon glyphicon-stop"></span> Stop
+                </button>
             </div>
 		</div>
         
