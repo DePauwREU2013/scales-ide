@@ -90,12 +90,13 @@ function init_toolbar() {
 	});
 
 	// Save Changes button
-	$('.icon-circle-check').click( function() {		
+	$('#save-changes-button').click( function() {
+	  get_related(active_file).contents = editor.getValue();
 		lstor.setItem("scales_workspace", JSON.stringify(workspace));
 		for (var f in workspace) {
 			workspace[f].dirty = false;
 		}
-		document.title = get_related[active_file].title;
+		document.title = get_related(active_file).title;
 		tree.reload();
 	});
 
@@ -237,7 +238,12 @@ function update_buffer() {
 	var buffer_version = get_related(active_file);
 	
 	buffer_version.dirty = (buffer_version.contents != editor.getValue());
-	document.title = buffer_version.dirty ? get_related[active_file].title + "*" : get_related[active_file].title;
+	if (buffer_version.dirty) {
+	  document.title = get_related(active_file).title + '*';  
+	} else {
+	  document.title = get_related(active_file).title;
+	}
+
 	console.log(buffer_version.dirty);
 	// Find the approprate file in the workspace
 }
