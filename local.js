@@ -1,27 +1,29 @@
 // Globals
 var active_file,
-	current_buffer,
+	  current_buffer, 
     debugData,
-	tree,
-	lstor,
-	workspace;
+	  tree,
+	  lstor,
+	  workspace,
+	  HOST,
+	  SOURCE;
 
 init_local_storage();
 
 /** document.ready
  *
  */
-$(document).ready(function () {
+$(document).ready(function() {
 	
 	init_ace();
 	
-	init_canvas();
+	init_canvas();	
 	
 	init_jquery_ui();
 
 	init_editor_events();
-    
-    load_file_tree();
+
+ 	load_file_tree();
 
  	init_toolbar();
 
@@ -38,11 +40,11 @@ function init_local_storage() {
 
 	// If no workspace is represented in the lstor, create a default:
 	if (!lstor.getItem("scales_workspace")) {
-		lstor.setItem("scales_workspace","[{\"title\":\"Hello World\",\"expanded\":true,\"key\":\"1\",\"folder\":true,\"children\":[{\"title\":\"main.scala\",\"key\":\"2\",\"contents\":\"this is the contents of the file\",\"language\":\"scala\"},{\"title\":\"libscales.scala\",\"key\":\"3\",\"contents\":\"itscales!\",\"language\":\"scala\"}]},{\"title\":\"Goodbye Cruel World\",\"expanded\":true,\"key\":\"4\",\"folder\":true,\"children\":[{\"title\":\"main.scala\",\"key\":\"5\",\"contents\":\"thisisthecontentsofthefile\",\"language\":\"scala\"},{\"title\":\"libscales.scala\",\"key\":\"6\",\"contents\":\"itscales!\",\"language\":\"scala\"}]}]");
+		lstor.setItem("scales_workspace", "[{\"title\":\"default.scala\",\"key\":\"1\",\"contents\":\"this is the contents of the file\",\"language\":\"scala\",\"dirty\":false},{\"title\":\"resource.scala\",\"key\":\"2\",\"contents\":\"/*This is an example of a second file in your project.*/\",\"language\":\"scala\",\"dirty\":false}]");
 	}
 
 	// Populate the workspace buffer from the lstor:
-	workspace_object = JSON.parse(lstor.getItem("scales_workspace"));
+	workspace = JSON.parse(lstor.getItem("scales_workspace"));
 }
 
 /** load_file_tree
@@ -51,25 +53,32 @@ function init_local_storage() {
  */
 function load_file_tree() {
 
-	// Create the fancytree object.
+	// Create the fancytree object:
 	$('#tree').fancytree({  		
-		source: workspace_object,
+		source: workspace,
 		debugLevel: 0,
-        minExpandLevel: 1,
-        clickFolderMode: 2,
 		// When a node is activated (clicked/keyboard):
 		activate: function(event, data){
-			var node = data.node;		
+			var node = data.node;
 
-			// If the node is a file, load its contents to editor:
-			if (!node.folder) {
-				active_file = node;
-				
-				editor.setValue(active_file.data.contents);
+			// Enable the ACE editor:		
+
+
+			// If this is the first file activated this session:
+			if (editor.getReadOnly()) {
+				editor.setReadOnly(false);
+
+			// Else, the user has just switched from another file	
+			} else {
+
 			}
+	
+	        // Set active_file to the newly activated file:
+			active_file = node;	
+
+			// Load document contents into editor:
+			editor.setValue(workspace[get_index()].contents);
 		}, 
-		// beforeActivate: function(event, data){},
-		
 		// Apply jQueryUI theme:
 		extensions: ["themeroller"]
 	  });
@@ -83,37 +92,30 @@ function load_file_tree() {
  */
 function init_toolbar() {
 	
-	// New Project button
-	$('.icon-folder').click( function() {
-		var project_name =  prompt ("Choose a name for this project:")
-		workspace_object.push(new Project(project_name) );	
-		tree.reload();
-		workspace_object[workspace_object.length-1].children.push({
-			"title": "main.scala",
-			"key": tree.count() + 1,
-			"language": "scala",
-			"content": ""
-		});
-		tree.reload();
-	});
-
 	// New File button
-	$('.icon-file').click( function() {
+	$('#new-file-button').click( function() {
 		// New file
+		file_name = prompt("Enter a name for the file:");
+		if (file_name) {
+  		workspace.push({
+  		  "title": file_name,
+  		  "language": "scala",
+  		  "key": tree.count() +1,
+  		  "contents": "",
+  		  "dirty": false
+		  });
+		}
+  
+	  $('#save-changes-button').trigger("click");
+	}); 
+	  
 		console.log(this);
-	});
+
 
 	// Save Changes button
-	$('.icon-circle-check').click( function() {
-        for (var p in workspace_object) {
-            for (var f in workspace_object[p].children) {
-                workspace_object[p].children[f].title = 
-                    workspace_object[p].children[f].title.replace(/\*/, "");
-            }
-        }
-        
-		lstor.setItem("scales_workspace", JSON.stringify(workspace_object));
-        note_unsaved_files();
+	$('#save-changes-button').click( function() {
+		lstor.setItem("scales_workspace", JSON.stringify(workspace));
+		console.log("clicked.");
 		tree.reload();
 	});
 
@@ -122,18 +124,6 @@ function init_toolbar() {
 		// Revert Changes
 		console.log(this);
 	});
-}
-
-/** Project
- * Constructor for Project objects.
- * @param projectName string representing the title of the project.
- * @return a newly constructed Project object.
- */
-function Project(projectName) {
-	this.title = projectName;
-	this.key = tree.count() + 1;
-	this.folder = true;
-	this.children = [];
 }
 
 /** init_ace
@@ -146,9 +136,12 @@ function init_ace() {
 	editor.getSession().setMode('ace/mode/scala');
 
 	// Wrap text based on size of editor panel:
-	var valstr = "// Welcome to the Scales IDE.";
+	var valstr = "/* Welcome to the Scales IDE.";
+	valstr += "\nTo use this editor, either choose a file from the list on the left\n";
+	valstr += "or create a New File using the button at the top.";
 	editor.setValue(valstr);
 	editor.setOption("wrap", "free");
+	editor.setReadOnly(true);
 }
 
 /** init_canvas
@@ -252,45 +245,18 @@ function exec_parser() {
     } // catch(exn)
 }
 
-function note_unsaved_files() {
-    stored = get_related(JSON.parse(lstor["scales_workspace"]), active_file);
-    buffered = get_related(workspace_object, active_file);
-    
-    if (buffered.contents !== stored.contents) {
-        buffered.title = stored.title + "*";
-        tree.reload();
-        expand_tree();
-    } else {
-        buffered.title = stored.title;
-        tree.reload();
-        expand_tree();
-    }
+function get_index() {
+	return active_file.key - 1;
 }
-    
 
-function get_related(source, active) {
-    // Check each project:
-	for (var p in source) {
-	    
-        // If its key equals the key of the active file's parent project, then:
-	    if (source[p].key === active.parent.key) {
-	    	
-            // Check each file in the project:
-            for (var f in source[p].children) {
-	        	
-                // If its key matches the key of the active_file, return the member.
-                if (source[p].children[f].key === active.key) {
-	               return source[p].children[f];
-	            }
-	        }
-	    }
-	}	
-}
 /** update_buffer
  *
  */
 function update_buffer() {
-    get_related(workspace_object, active_file).contents = editor.getValue();	
+
+	
+	workspace[get_index()].contents = editor.getValue();
+	// Find the approprate file in the workspace
 }
 
 /** init_parser
@@ -303,7 +269,6 @@ function init_editor_events() {
   editor.on("change", function(e) {
   	exec_parser();
   	update_buffer();
-    note_unsaved_files();
   });
 
 }
@@ -324,11 +289,29 @@ function render() {
  * navigate away from (or reload) the IDE.
  */
 window.onbeforeunload = function() {
-	// If workspace_object and lstor["scales_workspace"] have diffrent values
-	if (lstor.getItem("scales_workspace") !== JSON.stringify(workspace_object)) {
-		return "This page is asking you to confirm that you want to leave - data you have entered may not be saved.";
-	} else {
-		return;
-	}
+	document.querySelector('#save-changes-button').click();
 };
 
+
+function post_str(str, server) {
+  $.ajax({
+    type: "POST",
+    url: server,
+    data: str,
+    success: function( data) {
+      cosole.log(data);
+    }
+  });
+}
+
+function build() {
+  post_str(SOURCE, HOST);
+}
+
+console.log('Type help for a list of commands.');
+
+help = "The following commands are available:\
+  post_str(<source>, <host>), wherein <source> is a stringified version of the JSON you want to send to the server and <host> is the server's URL.\
+  \
+  You can also set environment variables: SOURCE and HOST as follows:\
+  One you have set the env variables, you can simlpy call build(), and the contents of SOURCE will be sent to, HOST.";
