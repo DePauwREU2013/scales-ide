@@ -59,32 +59,26 @@ function load_file_tree() {
 		debugLevel: 0,
 		// When a node is activated (clicked/keyboard):
 		activate: function(event, data){
-			var node = data.node;		
+			var node = data.node;
 
-			// If the node is a file, load its contents to editor:
-			if (node) {
-			  
-			  // If there's already a file open, copy the editor contents into the 
-			  // file's workspace object:
-			  console.log("active_file: "  + active_file);
-        if (active_file && active_file.data.dirty) {
-          get_related(active_file).contents = editor.getValue();
-        }
-        if (tree) {
-          tree.reload();
-        }
-        // Set active_file to the newly activated file:
-				active_file = node;
-				
-				// Update web page title:
-				document.title = get_related(active_file).title
-				
-				// Load document contents into editor:
-				editor.setValue(active_file.data.contents);
+			// Enable the ACE editor:		
+
+
+			// If this is the first file activated this session:
+			if (editor.getReadOnly()) {
+				editor.setReadOnly(false);
+
+			// Else, the user has just switched from another file	
+			} else {
+
 			}
+	
+	        // Set active_file to the newly activated file:
+			active_file = node;	
+
+			// Load document contents into editor:
+			editor.setValue(workspace[get_index()].contents);
 		}, 
-		// beforeActivate: function(event, data){},
-		
 		// Apply jQueryUI theme:
 		extensions: ["themeroller"]
 	  });
@@ -120,13 +114,8 @@ function init_toolbar() {
 
 	// Save Changes button
 	$('#save-changes-button').click( function() {
-	  // Saves all changes:
-	  get_related(active_file).contents = editor.getValue();
 		lstor.setItem("scales_workspace", JSON.stringify(workspace));
-		for (var f in workspace) {
-			workspace[f].dirty = false;
-		}
-		document.title = get_related(active_file).title;
+		console.log("clicked.");
 		tree.reload();
 	});
 
@@ -147,9 +136,12 @@ function init_ace() {
 	editor.getSession().setMode('ace/mode/scala');
 
 	// Wrap text based on size of editor panel:
-	var valstr = "// Welcome to the Scales IDE.";
+	var valstr = "/* Welcome to the Scales IDE.";
+	valstr += "\nTo use this editor, either choose a file from the list on the left\n";
+	valstr += "or create a New File using the button at the top.";
 	editor.setValue(valstr);
 	editor.setOption("wrap", "free");
+	editor.setReadOnly(true);
 }
 
 /** init_canvas
@@ -253,28 +245,17 @@ function exec_parser() {
     } // catch(exn)
 }
 
-function get_related(active) {
-	for (var f in workspace) {
-		if (workspace[f].key === active.key) {
-			return workspace[f];
-		}
-	}
+function get_index() {
+	return active_file.key - 1;
 }
 
 /** update_buffer
  *
  */
 function update_buffer() {
-	var buffer_version = get_related(active_file);
-	
-	buffer_version.dirty = (buffer_version.contents != editor.getValue());
-	if (buffer_version.dirty) {
-	  document.title = get_related(active_file).title + '*';  
-	} else {
-	  document.title = get_related(active_file).title;
-	}
 
-	console.log(buffer_version.dirty);
+	
+	workspace[get_index()].contents = editor.getValue();
 	// Find the approprate file in the workspace
 }
 
@@ -308,12 +289,7 @@ function render() {
  * navigate away from (or reload) the IDE.
  */
 window.onbeforeunload = function() {
-	// If workspace and lstor["scales_workspace"] have diffrent values
-	if (lstor.getItem("scales_workspace") !== JSON.stringify(workspace)) {
-		return "This page is asking you to confirm that you want to leave - data you have entered may not be saved.";
-	} else {
-		return;
-	}
+	document.querySelector('#save-changes-button').click();
 };
 
 
