@@ -106,11 +106,10 @@ function init_toolbar() {
 		  });
 		}
   
-	  $('#save-changes-button').trigger("click");
+		// Save the workspace to local storage
+		$('#save-changes-button').trigger("click");
+	
 	}); 
-	  
-		console.log(this);
-
 
 	// Save Changes button
 	$('#save-changes-button').click( function() {
@@ -123,6 +122,29 @@ function init_toolbar() {
 	$('.icon-trash').click( function() {
 		// Revert Changes
 		console.log(this);
+	});
+
+	// Build & Run button
+	$('#build-run-button').click( function() {
+		HOST = null;
+		HOST = prompt("Enter the url for the compile server:","test.php");
+		if (HOST) {
+
+			// Save the workspace to local storage
+			$('save-changes-button').click();
+			var build_request = $.ajax({
+  				type: "POST",
+ 				url: HOST,
+ 				data: JSON.stringify(workspace,undefined,2),
+ 				dataType: "text",
+ 				contentType: "text/plain",
+ 				success: function (data) {
+					console.log("Response from server: \n" + data);
+ 				}
+ 			});
+		}
+
+
 	});
 }
 
