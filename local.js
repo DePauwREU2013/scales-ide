@@ -1,12 +1,12 @@
 // Globals
 var active_file,
-	current_buffer, 
+	  current_buffer, 
     debugData,
-	tree,
-	lstor,
-	workspace,
-	HOST,
-	SOURCE;
+	  tree,
+	  lstor,
+	  workspace,
+	  HOST,
+	  SOURCE;
 
 init_local_storage();
 
@@ -23,7 +23,7 @@ $(document).ready(function() {
 
 	init_editor_events();
 
-   	load_file_tree();
+ 	load_file_tree();
 
  	init_toolbar();
 
@@ -53,7 +53,7 @@ function init_local_storage() {
  */
 function load_file_tree() {
 
-	// Create the fancytree object.
+	// Create the fancytree object:
 	$('#tree').fancytree({  		
 		source: workspace,
 		debugLevel: 0,
@@ -63,8 +63,23 @@ function load_file_tree() {
 
 			// If the node is a file, load its contents to editor:
 			if (node) {
+			  
+			  // If there's already a file open, copy the editor contents into the 
+			  // file's workspace object:
+			  console.log("active_file: "  + active_file);
+        if (active_file && active_file.data.dirty) {
+          get_related(active_file).contents = editor.getValue();
+        }
+        if (tree) {
+          tree.reload();
+        }
+        // Set active_file to the newly activated file:
 				active_file = node;
+				
+				// Update web page title:
 				document.title = get_related(active_file).title
+				
+				// Load document contents into editor:
 				editor.setValue(active_file.data.contents);
 			}
 		}, 
@@ -86,11 +101,26 @@ function init_toolbar() {
 	// New File button
 	$('#new-file-button').click( function() {
 		// New file
+		file_name = prompt("Enter a name for the file:");
+		if (file_name) {
+  		workspace.push({
+  		  "title": file_name,
+  		  "language": "scala",
+  		  "key": tree.count() +1,
+  		  "contents": "",
+  		  "dirty": false
+		  });
+		}
+  
+	  $('#save-changes-button').trigger("click");
+	}); 
+	  
 		console.log(this);
-	});
+
 
 	// Save Changes button
 	$('#save-changes-button').click( function() {
+	  // Saves all changes:
 	  get_related(active_file).contents = editor.getValue();
 		lstor.setItem("scales_workspace", JSON.stringify(workspace));
 		for (var f in workspace) {
