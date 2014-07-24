@@ -135,19 +135,31 @@ function init_toolbar() {
 
 			// Save the workspace to local storage
 			$('save-changes-button').click();
+
+			// Send the source code to the compiler and execute the result:
 			var build_request = $.ajax({
   				type: "POST",
  				url: HOST,
  				data: JSON.stringify(workspace,undefined,2),
  				dataType: "text",
  				contentType: "text/plain",
+
+ 				// If it compiles, get the scripts it produced:
  				success: function (data) {
-					worker = new Worker(data);
- 				}
+
+ 					// TODO: remove hard-coded file names
+ 					
+ 					// Get the scala-js object code:
+ 					$.getScript('example-fastopt.js').success( function(data) {
+ 						// After it's loaded, get the launcher:
+ 						$.get('example-launcher.js').success( function(data) {
+ 							// After the launcher is loaded, execute it:
+ 							eval(data);
+ 						});
+ 					});
+				}
  			});
 		}
-
-
 	});
 }
 
