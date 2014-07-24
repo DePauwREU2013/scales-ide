@@ -1,12 +1,13 @@
 // Globals
 var active_file,
-	  current_buffer, 
-    debugData,
-	  tree,
-	  lstor,
-	  workspace,
-	  HOST,
-	  SOURCE;
+	current_buffer, 
+	debugData,
+	tree,
+	lstor,
+	workspace,
+	worker,
+	HOST,
+	SOURCE;
 
 init_local_storage();
 
@@ -117,11 +118,13 @@ function init_toolbar() {
 		console.log("clicked.");
 		tree.reload();
 	});
-
-	// Revert Changes button
-	$('.icon-trash').click( function() {
-		// Revert Changes
-		console.log(this);
+	// Zoom out button
+	$('#zoom-out-button').click( function() {
+		editor.setOption('fontSize', editor.getOption('fontSize') - 2);
+	});
+	// Zoom In button
+	$('#zoom-in-button').click( function() {
+		editor.setOption('fontSize', editor.getOption('fontSize') + 2);
 	});
 
 	// Build & Run button
@@ -139,7 +142,7 @@ function init_toolbar() {
  				dataType: "text",
  				contentType: "text/plain",
  				success: function (data) {
-					console.log("Response from server: \n" + data);
+					worker = new Worker(data);
  				}
  			});
 		}
@@ -163,6 +166,7 @@ function init_ace() {
 	valstr += "or create a New File using the button at the top.";
 	editor.setValue(valstr);
 	editor.setOption("wrap", "free");
+	editor.setOption('fontSize', 14);
 	editor.setReadOnly(true);
 }
 
@@ -299,7 +303,10 @@ function init_editor_events() {
  * renders the red square on the canvas.
  */
 function render() {
-
+	var c = document.querySelector('canvas');
+	var ctx = c.getContext('2d');
+	ctx.fillStyle = '#FF0000';
+	ctx.fillRect(0,0,50,50);
 }
 
 /** window.onbeforeunload
@@ -318,7 +325,7 @@ function post_str(str, server) {
     url: server,
     data: str,
     success: function( data) {
-      cosole.log(data);
+      
     }
   });
 }
