@@ -353,3 +353,16 @@ help = "The following commands are available:\
   \
   You can also set environment variables: SOURCE and HOST as follows:\
   One you have set the env variables, you can simlpy call build(), and the contents of SOURCE will be sent to, HOST.";
+
+  function toggleFullScreen() {
+  	if (document.querySelector('#output').mozRequestFullScreen)
+  		document.querySelector('#output').mozRequestFullScreen();
+  	else if (document.querySelector('#output').webkitRequestFullscreen)
+  		document.querySelector('#output').webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+  }
+    document.addEventListener("keydown", function(e) {
+    	if (e.keyCode == 13 && e.altKey) {
+      		toggleFullScreen();
+      	}
+
+    });
