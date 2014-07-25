@@ -146,21 +146,16 @@ function init_toolbar() {
 
  				// If it compiles, get the scripts it produced:
  				success: function (data) {
-
  					// TODO: remove hard-coded file names
- 					
- 					// Get the scala-js object code:
- 					$.getScript('example-fastopt.js').success( function(data) {
- 						// After it's loaded, get the launcher:
- 						$.get('example-launcher.js').success( function(data) {
- 							// After the launcher is loaded, execute it:
- 							eval(data);
- 						});
- 					});
+ 					$.getScript(JSON.parse(data)[0]);
+					$.getScript(JSON.parse(data)[1], function(launcher_data) {
+							eval(launcher_data);
+						});
 				}
- 			});
+			});
 		}
 	});
+
 }
 
 /** init_ace
