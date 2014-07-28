@@ -147,15 +147,25 @@ function init_toolbar() {
  				// If it compiles, get the scripts it produced:
  				success: function (data) {
  					// TODO: remove hard-coded file names
- 					$.getScript(JSON.parse(data)[0]);
-					$.getScript(JSON.parse(data)[1], function(launcher_data) {
-							eval(launcher_data);
-						});
+ 					$.ajax({
+ 						url: JSON.parse(data)[0],
+ 						dataType: "script",
+ 						success: function() {
+							$.ajax({
+								url: JSON.parse(data)[1],
+								dataType: "script",
+								success: function(launcher_data) {
+									eval(launcher_data);
+								}	
+							}) 							
+ 						}
+
+					});
 				}
-			});
+			});	
+
 		}
 	});
-
 }
 
 /** init_ace
