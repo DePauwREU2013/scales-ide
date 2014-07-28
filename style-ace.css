@@ -87,7 +87,7 @@ a:hover {
     bottom: 0;
     margin-left: 11px;
 }
-.editor {
+.scales-editor {
     position: absolute; 
     top: 0; 
     bottom: 0; 
@@ -173,4 +173,8 @@ ul.project-tree {
 	font-size: .8em;
 	margin: .5em 1em 0 0;
 	float: right;
+}
+
+input {
+	max-height: 2em;
 }

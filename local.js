@@ -40,7 +40,9 @@ function init_local_storage() {
 	lstor = window.localStorage;
 
 	// If no workspace is represented in the lstor, create a default:
-	if (!lstor.getItem("scales_workspace")) {
+	if (lstor.getItem("scales_workspace")) {
+		// nothing
+	} else {
 		lstor.setItem("scales_workspace", "[{\"title\":\"default.scala\",\"key\":\"1\",\"contents\":\"this is the contents of the file\",\"language\":\"scala\",\"dirty\":false},{\"title\":\"resource.scala\",\"key\":\"2\",\"contents\":\"/*This is an example of a second file in your project.*/\",\"language\":\"scala\",\"dirty\":false}]");
 	}
 
@@ -131,7 +133,11 @@ function init_toolbar() {
 	$('#zoom-in-button').click( function() {
 		editor.setOption('fontSize', editor.getOption('fontSize') + 2);
 	});
-
+	// Editor Options button
+	// Shows ace's options menu
+	$('#editor-options-button').click( function() {
+		editor.execCommand("showSettingsMenu");
+	});
 	// Build & Run button
 	// Executes XHR's to dynamically load and run javascript files
 	// created by the server.
@@ -193,15 +199,29 @@ function init_ace() {
 	editor.setOption('fontSize', 14);
 	editor.setReadOnly(true);
 
-	editor.commands.addCommand({
-   		name: 'myCommand',
+	editor.commands.addCommands([{
+   		name: 'buildAndRun',
     	bindKey: {win: 'Ctrl-Enter',  mac: 'Command-Return'},
     	exec: function(editor) {
         //...
         	$('#build-run-button').trigger("click");
     	},
     	readOnly: true // false if this command should not apply in readOnly mode
-	});
+	}, {
+		name: 'zoomIn',
+		bindKey: {win: 'Ctrl-Alt-=', mac: 'Command-Alt-='},
+		exec: function(editor) {
+			$('#zoom-in-button').click();	
+		},
+		readOnly: true
+	}, {
+		name: 'zoomOut',
+		bindKey: {win: 'Ctrl-Alt--', mac: 'Command-Alt--'},
+		exec: function(editor) {
+			$('#zoom-out-button').click();	
+		},
+		readOnly: true
+	}]);
 }
 
 /** init_canvas
