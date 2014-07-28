@@ -349,15 +349,56 @@ help = "The following commands are available:\
   You can also set environment variables: SOURCE and HOST as follows:\
   One you have set the env variables, you can simlpy call build(), and the contents of SOURCE will be sent to, HOST.";
 
-  function toggleFullScreen() {
-  	if (document.querySelector('#output').mozRequestFullScreen)
-  		document.querySelector('#output').mozRequestFullScreen();
-  	else if (document.querySelector('#output').webkitRequestFullscreen)
-  		document.querySelector('#output').webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
-  }
-    document.addEventListener("keydown", function(e) {
-    	if (e.keyCode == 13 && e.altKey) {
-      		toggleFullScreen();
-      	}
+function toggleFullScreen() {
+	var canvas = document.querySelector('#output');
+	// Mozilla
+	if (output.mozRequestFullScreen) {
+		if (fullScreen) {
+			document.mozCancelFullScreen();
+		} else {
+			output.mozRequestFullScreen();
+			$('#output').attr("width",window.outerWidth + "px");
+			render();
+		}
+	} else if (output.webkitRequestFullscreen) {
+		if (document.webkitIsFullScreen) {
+			document.webkitExitFullscreen();
+		} else {
+			output.webkitRequestFullscreen();
+				
 
-    });
+		}
+	}
+}
+
+
+
+// Checks to see if fullscreen event has fired (fullscreen requests are asynch.
+// we must wait for notification before any actions after entering or exiting fullscreen
+// are triggered):
+// document.addEventListener("webkitfullscreenchange", function(evt) {
+// 	// If entering fullscreen:
+// 	if (document.webkitIsFullScreen) {
+
+// 		// Resize canvas:
+// 		$('#output').attr("width",window.outerWidth + "px");
+// 		$('#output').attr("height",window.outerHeight + "px");
+// 		render();
+// 	}
+// });
+
+// document.addEventListener("mozfullscreenchange", function(evt) {
+// 	if (fullScreen) {
+// 		$('#output').attr("width",window.outerWidth + "px");
+// 		render();
+// 	}			
+// });
+
+
+// Triggers fullscreen
+// **If not triggered from within an event handler, fullscreen requests are denied.**
+document.addEventListener("keydown", function(e) {
+	if (e.keyCode == 13 && e.altKey) {
+  		toggleFullScreen();
+  	}
+});
