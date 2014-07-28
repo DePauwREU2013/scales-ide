@@ -384,6 +384,7 @@ function toggleFullScreen() {
 	}
 }
 
+// Triggered when the document enters fullscreen (in webkit)
 document.addEventListener("webkitfullscreenchange", function(e) {
 	if (document.webkitIsFullScreen) {
 		console.log(e);
