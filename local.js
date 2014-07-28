@@ -113,21 +113,28 @@ function init_toolbar() {
 	}); 
 
 	// Save Changes button
+	// Saves the current workspace buffer into the local storage object
 	$('#save-changes-button').click( function() {
 		lstor.setItem("scales_workspace", JSON.stringify(workspace));
 		console.log("clicked.");
 		tree.reload();
 	});
+
 	// Zoom out button
+	// Decreases editor font size
 	$('#zoom-out-button').click( function() {
 		editor.setOption('fontSize', editor.getOption('fontSize') - 2);
 	});
+
 	// Zoom In button
+	// Increases editor font size
 	$('#zoom-in-button').click( function() {
 		editor.setOption('fontSize', editor.getOption('fontSize') + 2);
 	});
 
 	// Build & Run button
+	// Executes XHR's to dynamically load and run javascript files
+	// created by the server.
 	$('#build-run-button').click( function() {
 		HOST = null;
 		HOST = prompt("Enter the url for the compile server:","test.php");
@@ -185,6 +192,16 @@ function init_ace() {
 	editor.setOption("wrap", "free");
 	editor.setOption('fontSize', 14);
 	editor.setReadOnly(true);
+
+	editor.commands.addCommand({
+   		name: 'myCommand',
+    	bindKey: {win: 'Ctrl-Enter',  mac: 'Command-Return'},
+    	exec: function(editor) {
+        //...
+        	$('#build-run-button').trigger("click");
+    	},
+    	readOnly: true // false if this command should not apply in readOnly mode
+	});
 }
 
 /** init_canvas
@@ -263,7 +280,7 @@ function init_jquery_ui() {
 
 
 /** exec_parser
- *
+ *  Executes the PEG.js parser
  */
 function exec_parser() {
 
@@ -288,12 +305,16 @@ function exec_parser() {
     } // catch(exn)
 }
 
+/** get_index
+ *  returns a zero-based index derived from active_file's 
+ *  fancyTree key.
+ */
 function get_index() {
 	return active_file.key - 1;
 }
 
 /** update_buffer
- *
+ *  Stores the editor's contents into the workspace buffer.
  */
 function update_buffer() {
 
@@ -327,86 +348,53 @@ function render() {
 }
 
 /** window.onbeforeunload
- * If the user has made changes to the buffered workspace, but not saved them
- * to local storage, they will be bugged by a confirm pop-up if they try to 
- * navigate away from (or reload) the IDE.
+ * Before leaving the page, trigger a save.
  */
 window.onbeforeunload = function() {
 	document.querySelector('#save-changes-button').click();
 };
 
-
-function post_str(str, server) {
-  $.ajax({
-    type: "POST",
-    url: server,
-    data: str,
-    success: function( data) {
-      
-    }
-  });
-}
-
-function build() {
-  post_str(SOURCE, HOST);
-}
-
-console.log('Type help for a list of commands.');
-
-help = "The following commands are available:\
-  post_str(<source>, <host>), wherein <source> is a stringified version of the JSON you want to send to the server and <host> is the server's URL.\
-  \
-  You can also set environment variables: SOURCE and HOST as follows:\
-  One you have set the env variables, you can simlpy call build(), and the contents of SOURCE will be sent to, HOST.";
-
+/** toggleFullScreen
+ *  Work in progress
+ */
 function toggleFullScreen() {
-	var canvas = document.querySelector('#output');
-	// Mozilla
-	if (output.mozRequestFullScreen) {
+	var canvas = document.querySelector('#playground');
+	// output
+	if (canvas.mozRequestFullScreen) {
 		if (fullScreen) {
 			document.mozCancelFullScreen();
 		} else {
-			output.mozRequestFullScreen();
-			$('#output').attr("width",window.outerWidth + "px");
+			canvas.mozRequestFullScreen();
+			$('#output').attr("width",window.outerWidth);
+			$('#output').attr("height".window.outerHeight);
 			render();
 		}
-	} else if (output.webkitRequestFullscreen) {
+
+	// Webkit
+	} else if (canvas.webkitRequestFullscreen) {
 		if (document.webkitIsFullScreen) {
 			document.webkitExitFullscreen();
 		} else {
-			output.webkitRequestFullscreen();
-				
+			canvas.webkitRequestFullscreen();
+			$('#output').attr("width",window.outerWidth);
+			$('#output').attr("height",window.outerHeight);
+			render();		
 
 		}
 	}
 }
 
+document.addEventListener("webkitfullscreenchange", function(e) {
+	if (document.webkitIsFullScreen) {
+		console.log(e);
+		$('#output').attr("width",window.outerWidth);
+		$('#output').attr("height",window.outerHeight);
+		//render();		
 
+	}
+})
 
-// Checks to see if fullscreen event has fired (fullscreen requests are asynch.
-// we must wait for notification before any actions after entering or exiting fullscreen
-// are triggered):
-// document.addEventListener("webkitfullscreenchange", function(evt) {
-// 	// If entering fullscreen:
-// 	if (document.webkitIsFullScreen) {
-
-// 		// Resize canvas:
-// 		$('#output').attr("width",window.outerWidth + "px");
-// 		$('#output').attr("height",window.outerHeight + "px");
-// 		render();
-// 	}
-// });
-
-// document.addEventListener("mozfullscreenchange", function(evt) {
-// 	if (fullScreen) {
-// 		$('#output').attr("width",window.outerWidth + "px");
-// 		render();
-// 	}			
-// });
-
-
-// Triggers fullscreen
-// **If not triggered from within an event handler, fullscreen requests are denied.**
+// Trigger fullscreen using ALT+ENTER
 document.addEventListener("keydown", function(e) {
 	if (e.keyCode == 13 && e.altKey) {
   		toggleFullScreen();
